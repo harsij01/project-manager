@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1 width=device-width">
+        <title>{% block title %}Home{% endblock %}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <nav>
+            <a href="/">Home</a>
+            <a href="project.html">Projects</a>
+            <a href="dashboard.html"> Dashboard</a>
+            <a href="kanban.html">Kanban</a>
+        </nav>
+
+        <div class="container">
+            {% block content %}
+
+            {% endblock %}
+        </div>
+
+        <footer>
+            <p>Harsini Jegatheesan 2026</p>
+        </footer>
+    </body>
+</html>
