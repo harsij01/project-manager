@@ -10,7 +10,12 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
-    role = db.Column(db.String(10), nullable=False)
+    role = db.Column(db.String(20), nullable=False)
     password_hash = db.Column(db.String(300), nullable=False)
 
-
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    created_by = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(300))
+    status = db.Column(db.String(20), nullable=False)
