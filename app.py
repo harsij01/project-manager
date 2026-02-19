@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
@@ -56,8 +56,17 @@ def register():
 
     return render_template('register.html')
 
-@app.route('/login')
+@app.route('/login', methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+
+        existing_email = User.query.filter_by(email=email).first()
+        existing_password = User.query.filter_by(name=password).first()
+    
+        return redirect(url_for('login'))
+
     return render_template('login.html')
 
 @app.route('/project')
