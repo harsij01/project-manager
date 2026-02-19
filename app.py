@@ -51,6 +51,7 @@ def register():
         conn.close()
 
         flash("Registration Successful")
+        redirect(url_for('login'))
 
     return render_template('register.html')
 
