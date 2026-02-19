@@ -92,14 +92,20 @@ def login():
 
     return render_template('login.html')
 
-@app.route('/project')
-def project():
-    return render_template('project.html')
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash("Log out successfully!")
+    return redirect(url_for('login'))
 
 @app.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html')
+
+@app.route('/project')
+def project():
+    return render_template('project.html')
 
 @app.route('/kanban')
 def kanban():
