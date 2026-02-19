@@ -1,8 +1,11 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'default_developement_key'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
@@ -64,7 +67,7 @@ def login():
 
         existing_user = User.query.filter_by(email=email).first()
         
-        if existing_user and check_password_hash(existing_user.password, password):
+        if existing_user and check_password_hash(existing_user.password_hash, password):
             flash("Login successful!")
             return redirect(url_for('dashboard'))
         else:
