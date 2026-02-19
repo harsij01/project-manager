@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -72,6 +72,8 @@ def login():
         user = User.query.filter_by(email=email).first()
         
         if user and check_password_hash(user.password_hash, password):
+            session["user_id"] = user.id
+            session["user_role"] = user.role
             flash("Login successful!")
             return redirect(url_for('dashboard'))
         else:
