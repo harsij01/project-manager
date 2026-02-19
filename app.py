@@ -9,7 +9,7 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
     role = db.Column(db.String(20), nullable=False)
     password_hash = db.Column(db.String(300), nullable=False)
@@ -32,7 +32,7 @@ def register():
         email = request.form["email"]
         password = request.form["password"]
 
-        existing_user = User.query.filter_by(username=username).first()
+        existing_user = User.query.filter_by(name=username).first()
         existing_email = User.query.filter_by(email=email).first()
 
         if existing_user or existing_email:
@@ -44,7 +44,7 @@ def register():
         new_user = User(
             name=username,
             email=email,
-            role="member",  # default role
+            role="member",
             password_hash=password_hash
         )
 
