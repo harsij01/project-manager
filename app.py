@@ -1,5 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash
+import sqlite3
 
 app = Flask(__name__)
 
@@ -24,8 +26,32 @@ class Task(db.Model):
 def home():
     return render_template('layout.html')
 
-app.route('/register', methods=["GET", "POST"])
+@app.route('/register', methods=["GET", "POST"])
 def register():
+    if request.method == 'POST':
+        username = request.form["username"]
+        email = request.form["email"]
+        password = request.form["password"]
+
+        password_hash = generate_password_hash(password)
+
+        conn = sqlite3.connect("instance/database.db")
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROM users WHERE username = ? OR email = ?", (username, email))
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            flash("Username or Email already exists")
+            return redirect(url_for('register'))
+        
+        cursor.execute("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)", (username, email, password_hash))
+
+        conn.commit()
+        conn.close()
+
+        flash("Registration Successful")
+
     return render_template('register.html')
 
 @app.route('/project')
