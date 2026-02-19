@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
-import sqlite3
 
 app = Flask(__name__)
 
@@ -10,7 +9,7 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
     role = db.Column(db.String(20), nullable=False)
     password_hash = db.Column(db.String(300), nullable=False)
@@ -33,22 +32,24 @@ def register():
         email = request.form["email"]
         password = request.form["password"]
 
-        password_hash = generate_password_hash(password)
+        existing_user = User.query.filter_by(username=username).first()
+        existing_email = User.query.filter_by(email=email).first()
 
-        conn = sqlite3.connect("instance/database.db")
-        cursor = conn.cursor()
-
-        cursor.execute("SELECT * FROM users WHERE username = ? OR email = ?", (username, email))
-        existing_user = cursor.fetchone()
-
-        if existing_user:
+        if existing_user or existing_email:
             flash("Username or Email already exists")
             return redirect(url_for('register'))
-        
-        cursor.execute("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)", (username, email, password_hash))
 
-        conn.commit()
-        conn.close()
+        password_hash = generate_password_hash(password)
+
+        new_user = User(
+            name=username,
+            email=email,
+            role="member",  # default role
+            password_hash=password_hash
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
 
         flash("Registration Successful")
         redirect(url_for('login'))
