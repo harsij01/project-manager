@@ -62,10 +62,14 @@ def login():
         email = request.form["email"]
         password = request.form["password"]
 
-        existing_email = User.query.filter_by(email=email).first()
-        existing_password = User.query.filter_by(name=password).first()
-    
-        return redirect(url_for('login'))
+        existing_user = User.query.filter_by(email=email).first()
+        
+        if existing_user and check_password_hash(existing_user.password, password):
+            flash("Login successful!")
+            return redirect(url_for('dashboard'))
+        else:
+            flash("Incorrect email or password")
+            return redirect(url_for('login'))
 
     return render_template('login.html')
 
