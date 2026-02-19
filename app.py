@@ -24,6 +24,10 @@ class Task(db.Model):
 def home():
     return render_template('layout.html')
 
+app.route('/register', methods=["GET", "POST"])
+def register():
+    return render_template('register.html')
+
 @app.route('/project')
 def project():
     return render_template('project.html')
