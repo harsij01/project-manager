@@ -22,12 +22,11 @@ class User(db.Model):
     role = db.Column(db.String(20), nullable=False, default="member")
     password_hash = db.Column(db.String(300), nullable=False)
 
-class Task(db.Model):
+class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     created_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     description = db.Column(db.String(300))
-    status = db.Column(db.String(20), nullable=False, default="active")
 
 @app.route('/')
 def home():
@@ -72,16 +71,15 @@ def login_required(f):
             return redirect(url_for("login"))
         return f(*args, **kwargs)
     return decorated_function
-
-def role_required(required_role):
-    def decorator(f):
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            if session.get("user_role") != required_role:
-                flash("Access denied!")
-                return redirect(url_for('dashboard'))
-            return f(*args, **kwargs)
-        return decorated_function
+    
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_role") != "admin":
+            flash("Admins only.")
+            return redirect(url_for("dashboard"))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -113,15 +111,29 @@ def logout():
 def dashboard():
     return render_template('dashboard.html')
 
-@app.route('/admin')
+@app.route('/admin_panel')
 @login_required
-@role_required("admin")
+@admin_required
 def admin_panel():
     return render_template("admin_panel.html")
 
-@app.route('/project')
-def project():
-    return render_template('project.html')
+@app.route('/project/create', methods=["GET", "POST"])
+@login_required
+@admin_required
+def create_project():
+    if request.method == "POST":
+        name = request.form["name"]
+        description = request.form["description"]
+
+        new_project = Project(name=name, description=description, created_by=session["user_id"])
+
+        db.session.add(new_project)
+        db.session.commit()
+
+        flash("Project created successfully!")
+        return redirect(url_for("dashboard"))
+
+    return render_template('create_project.html')
 
 @app.route('/kanban')
 def kanban():
