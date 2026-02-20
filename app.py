@@ -19,7 +19,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
-    role = db.Column(db.String(20), nullable=False)
+    role = db.Column(db.String(20), nullable=False, default="member")
     password_hash = db.Column(db.String(300), nullable=False)
 
 class Task(db.Model):
@@ -73,6 +73,16 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def role_required(required_role):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if session.get("user_role") != required_role:
+                flash("Access denied!")
+                return redirect(url_for('dashboard'))
+            return f(*args, **kwargs)
+        return decorated_function
+
 @app.route('/login', methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -102,6 +112,12 @@ def logout():
 @login_required
 def dashboard():
     return render_template('dashboard.html')
+
+@app.route('/admin')
+@login_required
+@role_required("admin")
+def admin_panel():
+    return render_template("admin_panel.html")
 
 @app.route('/project')
 def project():

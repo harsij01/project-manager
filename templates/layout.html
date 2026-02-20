@@ -11,6 +11,9 @@
             <a href="/">Home</a>
             <a href="/project">Projects</a>
             <a href="/dashboard"> Dashboard</a>
+            {% if session.get('user_role') == 'admin' %}
+                <a href="{{ url_for('admin_panel') }}">Admin Panel</a>
+            {% endif %}
             <a href="/kanban">Kanban</a>
             <a href="/register">Register</a>
             <a href="/login">Login</a>
