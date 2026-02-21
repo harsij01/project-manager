@@ -162,7 +162,7 @@ def view_projects():
 @app.route('/projects/<id>')
 @login_required
 def project_details(id):
-    project = Project.query.get_or_404(project_id)
+    project = Project.query.get_or_404(id)
     return render_template("project_details.html", project=project)
 
 @app.route('/projects/<id>/add-member', methods=["POST"])
