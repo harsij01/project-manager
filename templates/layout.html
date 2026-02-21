@@ -17,7 +17,6 @@
             {% if session.get('user_role') == 'admin' %}
                 <a href="{{ url_for('create_project') }}">Create Project</a>
             {% endif %}
-            <a href="/kanban">Kanban</a>
             <a href="/register">Register</a>
             <a href="/login">Login</a>
             <a href="/logout"></a>

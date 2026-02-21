@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, session
+from flask import Flask, render_template, request, flash, redirect, url_for, session, abort
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from functools import wraps
@@ -156,7 +156,10 @@ def create_project():
 @app.route('/projects')
 @login_required
 def view_projects():
-    projects = Project.query.all()
+    if current_user.role == "admin":
+        projects = Project.query.all()
+    else:
+        projects = current_user.projects
     return render_template("projects.html", projects=projects)
 
 @app.route('/projects/<id>')
@@ -164,6 +167,9 @@ def view_projects():
 def project_details(id):
     project = Project.query.get_or_404(id)
     users = User.query.all()
+
+    if current_user not in project.members:
+        abort(403)
 
     return render_template("project_details.html", project=project, users=users)
 
@@ -181,10 +187,6 @@ def add_member(id):
         db.session.commit()
 
     return redirect(url_for("project_details", id=id))
-
-@app.route('/kanban')
-def kanban():
-    return render_template('kanban.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
