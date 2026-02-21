@@ -135,6 +135,12 @@ def create_project():
 
     return render_template('create_project.html')
 
+@app.route('/projects')
+@login_required
+def view_projects():
+    projects = Project.query.all()
+    return render_template("projects.html", projects=projects)
+
 @app.route('/kanban')
 def kanban():
     return render_template('kanban.html')
