@@ -14,5 +14,16 @@
 {% endfor %}
 </ul>
 
+{% if current_user.role == "admin" %}
+<form method="POST" action="{{ url_for('add_member', id=project.id) }}">
+    <select name="user_id">
+    {% for user in users %}
+      <option value="{{ user.id }}">{{ user.username }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Add Member</button>
+</form>
+{% endif %}
+
 <a href="{{ url_for('view_projects') }}">Back to Projects</a>
 {% endblock %}

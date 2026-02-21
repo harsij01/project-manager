@@ -163,9 +163,11 @@ def view_projects():
 @login_required
 def project_details(id):
     project = Project.query.get_or_404(id)
-    return render_template("project_details.html", project=project)
+    users = User.query.all()
 
-@app.route('/projects/<id>/add-member', methods=["POST"])
+    return render_template("project_details.html", project=project, users=users)
+
+@app.route('/projects/<id>/add_member', methods=["POST"])
 @login_required
 @admin_required
 def add_member(id):
