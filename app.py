@@ -15,6 +15,12 @@ login_manager.login_view = 'login'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 
+project_members = db.Table(
+    "project_members",
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
+    db.Column("project_id", db.Integer, db.ForeignKey("project.id"))
+)
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -22,11 +28,23 @@ class User(db.Model):
     role = db.Column(db.String(20), nullable=False, default="member")
     password_hash = db.Column(db.String(300), nullable=False)
 
+    projects = db.relationship(
+        "Project",
+        secondary=project_members,
+        back_populates="members"
+    )
+
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     created_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     description = db.Column(db.String(300))
+
+    members = db.relationship(
+        "User",
+        secondary=project_members,
+        back_populates="projects"
+    )
 
 @app.route('/')
 def home():
