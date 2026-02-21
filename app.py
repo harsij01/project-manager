@@ -141,6 +141,12 @@ def view_projects():
     projects = Project.query.all()
     return render_template("projects.html", projects=projects)
 
+@app.route('/projects/<int: project_id>')
+@login_required
+def project_details(project_id):
+    project = Project.query.get_or_404(project_id)
+    return render_template("project_details.html", project=project)
+
 @app.route('/kanban')
 def kanban():
     return render_template('kanban.html')
