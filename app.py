@@ -159,11 +159,26 @@ def view_projects():
     projects = Project.query.all()
     return render_template("projects.html", projects=projects)
 
-@app.route('/projects/<int: project_id>')
+@app.route('/projects/<id>')
 @login_required
-def project_details(project_id):
+def project_details(id):
     project = Project.query.get_or_404(project_id)
     return render_template("project_details.html", project=project)
+
+@app.route('/projects/<id>/add-member', methods=["POST"])
+@login_required
+@admin_required
+def add_member(id):
+    project = Project.query.get_or_404(id)
+
+    user_id = request.form.get("user_id")
+    user = User.query.get(user_id)
+
+    if user not in project.members:
+        project.members.append(user)
+        db.session.commit()
+
+    return redirect(url_for("project_details", id=id))
 
 @app.route('/kanban')
 def kanban():
