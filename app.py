@@ -57,7 +57,7 @@ class Project(db.Model):
         back_populates="projects"
     )
 
-class Task(db.Model):
+class Task(db.Model, cascade="all, delete-orphan"):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
