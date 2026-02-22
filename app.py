@@ -135,10 +135,9 @@ def login():
         user = User.query.filter_by(email=email).first()
         
         if user and check_password_hash(user.password_hash, password):
-            if user and check_password_hash(user.password_hash, password):
-                login_user(user)
-                flash("Login successful!")
-                return redirect(url_for('dashboard'))
+            login_user(user)
+            flash("Login successful!")
+            return redirect(url_for('dashboard'))
         else:
             flash("Incorrect email or password")
             return redirect(url_for('login'))
