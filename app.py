@@ -212,7 +212,7 @@ def add_member(id):
     project = Project.query.get_or_404(id)
 
     user_id = request.form.get("user_id")
-    user = User.query.get(user_id)
+    user = User.query.get_or_404(user_id)
 
     if user not in project.members:
         project.members.append(user)
