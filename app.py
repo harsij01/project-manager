@@ -58,7 +58,7 @@ class Project(db.Model):
         back_populates="projects"
     )
 
-class Task(db.Model, cascade="all, delete-orphan"):
+class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
@@ -70,7 +70,10 @@ class Task(db.Model, cascade="all, delete-orphan"):
     deadline = db.Column(db.DateTime)
 
     project_id = db.Column(db.Integer, db.ForeignKey("project.id"))
-    project = db.relationship("Project", backref="tasks")
+    project = db.relationship(
+        "Project",
+        backref=db.backref("tasks", cascade="all, delete-orphan")
+    )
 
     assignees = db.relationship(
         "User",
