@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, session, abort
+from flask import Flask, render_template, request, flash, redirect, url_for, abort, session
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, current_user
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from functools import wraps
@@ -12,6 +12,10 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'default_developement
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
@@ -28,7 +32,7 @@ task_assignees = db.Table(
     db.Column("task_id", db.Integer, db.ForeignKey("task.id"))
 )
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
@@ -113,22 +117,12 @@ def register():
         redirect(url_for('login'))
 
     return render_template('register.html')
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "user_id" not in session:
-            flash("Please login first")
-            return redirect(url_for("login"))
-        return f(*args, **kwargs)
-    return decorated_function
     
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if session.get("user_role") != "admin":
-            flash("Admins only.")
-            return redirect(url_for("dashboard"))
+        if current_user.role != "admin":
+            abort(403)
         return f(*args, **kwargs)
     return decorated_function
 
@@ -141,10 +135,10 @@ def login():
         user = User.query.filter_by(email=email).first()
         
         if user and check_password_hash(user.password_hash, password):
-            session["user_id"] = user.id
-            session["user_role"] = user.role
-            flash("Login successful!")
-            return redirect(url_for('dashboard'))
+            if user and check_password_hash(user.password_hash, password):
+                login_user(user)
+                flash("Login successful!")
+                return redirect(url_for('dashboard'))
         else:
             flash("Incorrect email or password")
             return redirect(url_for('login'))
@@ -152,9 +146,10 @@ def login():
     return render_template('login.html')
 
 @app.route('/logout')
+@login_required
 def logout():
-    session.clear()
-    flash("Log out successfully!")
+    logout_user()
+    flash("Logged out successfully!")
     return redirect(url_for('login'))
 
 @app.route('/dashboard')
@@ -195,16 +190,15 @@ def view_projects():
         projects = current_user.projects
     return render_template("projects.html", projects=projects)
 
-@app.route('/projects/<id>')
+@app.route('/projects/<int:id>')
 @login_required
 def project_details(id):
     project = Project.query.get_or_404(id)
-    users = User.query.all()
 
-    if current_user not in project.members:
+    if current_user.role != "admin" and current_user not in project.members:
         abort(403)
 
-    return render_template("project_details.html", project=project, users=users)
+    return render_template("project_details.html", project=project)
 
 @app.route('/projects/<id>/add_member', methods=["POST"])
 @login_required
