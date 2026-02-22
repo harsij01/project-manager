@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, abort, session
+from flask import Flask, render_template, request, flash, redirect, url_for, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -171,7 +171,11 @@ def create_project():
         name = request.form["name"]
         description = request.form["description"]
 
-        new_project = Project(name=name, description=description, created_by=session["user_id"])
+        new_project = Project(
+            name=name,
+            description=description,
+            created_by=current_user.id
+        )
 
         db.session.add(new_project)
         db.session.commit()
