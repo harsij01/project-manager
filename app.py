@@ -21,6 +21,12 @@ project_members = db.Table(
     db.Column("project_id", db.Integer, db.ForeignKey("project.id"))
 )
 
+task_assignees = db.Table(
+    "task_assignees",
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
+    db.Column("task_id", db.Integer, db.ForeignKey("task.id"))
+)
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -44,6 +50,25 @@ class Project(db.Model):
         "User",
         secondary=project_members,
         back_populates="projects"
+    )
+
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+
+    priority = db.Column(db.String(50))
+    status = db.Column(db.String(50), default="Pending")
+
+    deadline = db.Column(db.DateTime)
+
+    project_id = db.Column(db.Integer, db.ForeignKey("project.id"))
+    project = db.relationship("Project", backref="tasks")
+
+    assignees = db.relationship(
+        "User",
+        secondary=task_assignees,
+        backref="tasks"
     )
 
 @app.route('/')
