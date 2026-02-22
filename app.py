@@ -255,7 +255,8 @@ def create_task(id):
         user_ids = request.form.getlist("assignees")
         for user_id in user_ids:
             user = User.query.get(user_id)
-            task.assignees.append(user)
+            if user and user in project.members:
+                task.assignees.append(user)
 
         db.session.add(task)
         db.session.commit()
