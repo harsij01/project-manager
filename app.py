@@ -230,13 +230,18 @@ def create_task(id):
         name = request.form.get("name")
         description = request.form.get("description")
         priority = request.form.get("priority")
-        deadline = request.form.get("deadline")
+
+        deadline_str = request.form.get("deadline")
+        deadline = None
+
+        if deadline_str:
+            deadline = datetime.strptime(deadline_str, "%Y-%m-%d")
 
         task = Task(
             name=name,
             description=description,
             priority=priority,
-            deadline=datetime.strptime(deadline, "%Y-%m-%d"),
+            deadline=deadline,
             project=project
         )
 
