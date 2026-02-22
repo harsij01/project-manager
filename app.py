@@ -121,6 +121,8 @@ def register():
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return redirect(url_for("login"))
         if current_user.role != "admin":
             abort(403)
         return f(*args, **kwargs)
