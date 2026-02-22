@@ -156,7 +156,12 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    if current_user.role == "admin":
+        projects = Project.query.all()
+    else:
+        projects = current_user.projects
+
+    return render_template("dashboard.html", projects=projects)
 
 @app.route('/admin_panel')
 @login_required
