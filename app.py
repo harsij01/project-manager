@@ -69,7 +69,7 @@ class Task(db.Model):
 
     deadline = db.Column(db.DateTime)
 
-    project_id = db.Column(db.Integer, db.ForeignKey("project.id"))
+    project_id = db.Column(db.Integer, db.ForeignKey("project.id"), nullable=False)
     project = db.relationship(
         "Project",
         backref=db.backref("tasks", cascade="all, delete-orphan")
@@ -83,7 +83,7 @@ class Task(db.Model):
 
     @property
     def display_status(self):
-        if self.deadline and self.status != "Completed":
+        if self.deadline and self.status.lower() != "completed":
             if datetime.utcnow() > self.deadline:
                 return "Overdue"
         return self.status
