@@ -1,5 +1,25 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+<form method="POST">
+    <input type="text" name="name" placeholder="Task title" required>
 
+    <textarea name="description"></textarea>
+
+    <select name="priority">
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+    </select>
+
+    <input type="date" name="deadline">
+
+    <select name="assignees" multiple>
+    {% for member in members %}
+        <option value="{{ member.id }}">{{ member.username }}</option>
+    {% endfor %}
+    </select>
+
+    <button type="submit">Create Task</button>
+</form>
 {% endblock %}
