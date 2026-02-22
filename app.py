@@ -72,6 +72,12 @@ class Task(db.Model):
         backref="tasks"
     )
 
+    @property
+    def is_overdue(self):
+        if self.deadline and self.status != "Completed":
+            return datetime.utcnow() > self.deadline
+        return False
+
 @app.route('/')
 def home():
     return render_template('layout.html')
