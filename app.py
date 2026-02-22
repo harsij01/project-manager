@@ -58,6 +58,18 @@ class Project(db.Model):
         back_populates="projects"
     )
 
+    @property
+    def progress_percentage(self):
+        total_tasks = len(self.tasks)
+        if total_tasks == 0:
+            return 0
+
+        completed_tasks = len(
+            [task for task in self.tasks if task.status.lower() == "completed"]
+        )
+
+        return round((completed_tasks / total_tasks) * 100)
+
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
