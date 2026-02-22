@@ -183,6 +183,8 @@ def create_project():
             created_by=current_user.id
         )
 
+        new_project.members.append(current_user)
+
         db.session.add(new_project)
         db.session.commit()
 
