@@ -25,5 +25,23 @@
 </form>
 {% endif %}
 
+<h2>Tasks</h2>
+
+{% for task in project.tasks %}
+  <div>
+    <h4>{{ task.title }}</h4>
+    <p>{{ task.description }}</p>
+    <p>Priority: {{ task.priority }}</p>
+    <p>Status: {{ task.status }}</p>
+    <p>Deadline: {{ task.deadline.strftime("%Y-%m-%d") }}</p>
+
+    <p>Assigned to:
+      {% for user in task.assignees %}
+        {{ user.username }}
+      {% endfor %}
+    </p>
+  </div>
+{% endfor %}
+
 <a href="{{ url_for('view_projects') }}">Back to Projects</a>
 {% endblock %}
