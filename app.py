@@ -247,7 +247,7 @@ def create_task(id):
         db.session.add(task)
         db.session.commit()
 
-        return redirect(url_for("project_detail", id=id))
+        return redirect(url_for("project_details", id=id))
     
     members = project.members
     return render_template("create_task.html", project=project, members=members)
@@ -266,7 +266,7 @@ def update_task():
 
     db.session.commit()
 
-    return redirect(url_for("project_detail", id=task.project_id))
+    return redirect(url_for("project_details", id=task.project_id))
 
 if __name__ == "__main__":
     app.run(debug=True)
