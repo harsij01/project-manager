@@ -247,5 +247,21 @@ def create_task(id):
     members = project.members
     return render_template("create_task.html", project=project, members=members)
 
+@app.route('/projects/<int:id>/update_task', methods=["POST"])
+@login_required
+@admin_required
+def update_task():
+    task = Task.query.get_or_404(id)
+
+    if current_user not in task.assignees:
+        abort(403)
+
+    new_status = request.form.get("status")
+    task.status = new_status
+
+    db.session.commit()
+
+    return redirect(url_for("project_detail", id=task.project_id))
+
 if __name__ == "__main__":
     app.run(debug=True)
