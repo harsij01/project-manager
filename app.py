@@ -50,6 +50,7 @@ class Project(db.Model):
     name = db.Column(db.String(200), nullable=False)
     created_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     description = db.Column(db.String(300))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     members = db.relationship(
         "User",
@@ -61,6 +62,7 @@ class Task(db.Model, cascade="all, delete-orphan"):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     priority = db.Column(db.String(50))
     status = db.Column(db.String(50), default="Pending")
