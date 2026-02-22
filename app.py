@@ -203,7 +203,7 @@ def project_details(id):
 
     return render_template("project_details.html", project=project)
 
-@app.route('/projects/<id>/add_member', methods=["POST"])
+@app.route('/projects/<int:id>/add_member', methods=["POST"])
 @login_required
 @admin_required
 def add_member(id):
