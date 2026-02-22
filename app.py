@@ -114,7 +114,7 @@ def register():
         db.session.commit()
 
         flash("Registration Successful")
-        redirect(url_for('login'))
+        return redirect(url_for('login'))
 
     return render_template('register.html')
     
