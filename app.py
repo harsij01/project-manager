@@ -73,10 +73,11 @@ class Task(db.Model):
     )
 
     @property
-    def is_overdue(self):
+    def display_status(self):
         if self.deadline and self.status != "Completed":
-            return datetime.utcnow() > self.deadline
-        return False
+            if datetime.utcnow() > self.deadline:
+                return "Overdue"
+        return self.status
 
 @app.route('/')
 def home():

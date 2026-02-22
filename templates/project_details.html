@@ -33,13 +33,13 @@
     <p>{{ task.description }}</p>
     <p>Priority: {{ task.priority }}</p>
 
-    <p>Status:
-    {% if task.is_overdue %}
+    {% if task.display_status == "Overdue" %}
       <span style="color:red;">Overdue</span>
+    {% elif task.display_status == "Completed" %}
+      <span style="color:green;">Completed</span>
     {% else %}
-      {{ task.status }}
+      {{ task.display_status }}
     {% endif %}
-    </p>
 
     <p>Deadline: {{ task.deadline.strftime("%Y-%m-%d") }}</p>
 
