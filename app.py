@@ -4,6 +4,7 @@ from flask_login import LoginManager, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from functools import wraps
+import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'default_developement_key'
@@ -212,6 +213,39 @@ def add_member(id):
         db.session.commit()
 
     return redirect(url_for("project_details", id=id))
+
+@app.route('/projects/<int:id>/create_task', methods=["GET", "POST"])
+@login_required
+@admin_required
+def create_task(id):
+    project = Project.query.get_or_404(id)
+
+    if request.method == "POST":
+        name = request.form.get("name")
+        description = request.form.get("description")
+        priority = request.form.get("priority")
+        deadline = request.form.get("deadline")
+
+        task = Task(
+            name=name,
+            description=description,
+            priority=priority,
+            deadline=datetime.strptime(deadline, "%Y-%m-%d"),
+            project=project
+        )
+
+        user_ids = request.form.getlist("assignees")
+        for user_id in user_ids:
+            user = User.query.get(user_id)
+            task.assignees.append(user)
+
+        db.session.add(task)
+        db.session.commit()
+
+        return redirect(url_for("project_detail", id=id))
+    
+    members = project.members
+    return render_template("create_task.html", project=project, members=members)
 
 if __name__ == "__main__":
     app.run(debug=True)
