@@ -23,11 +23,20 @@
             </nav>
         </header>
 
-        <div class="container">
-            {% block content %}
-
-            {% endblock %}
-        </div>
+        {% block content %}
+        <main>
+            <section class="hero">
+                <h2>Organize Your Projects. Track Your Tasks.</h2>
+                <p>Manage your projects and tasks easily with your team.</p>
+                {% if not current_user.is_authenticated %}
+                    <div class="hero-buttons">
+                    <a class="btn" href="{{ url_for('login') }}">Login</a>
+                    <a class="btn btn-primary" href="{{ url_for('register') }}">Register</a>
+                </div>
+                {% endif %}
+            </section>
+        </main>
+        {% endblock %}
 
         <footer>
             <p>Harsini Jegatheesan 2026</p>
