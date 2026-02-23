@@ -27,7 +27,12 @@
         </div>
         {% endfor %}
     {% else %}
-        <p>You have no projects yet. {% if current_user.role == "admin" %}Create one using the “Create Project” button above.{% endif %}</p>
+        <p>You have no projects yet. 
+            {% if current_user.role == "admin" %}
+                <a href="{{ url_for('create_project') }}" class="btn btn-primary">Create Project</a>
+                Create one using the “Create Project” button above.
+            {% endif %}
+        </p>
     {% endif %}
 </section>
 {% endblock %}
