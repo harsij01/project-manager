@@ -1,63 +1,57 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+
 <h1>{{ project.name }}</h1>
+<p>{{ project.description or "No description provided." }}</p>
 
-<div>Description</div>
-<div>{{ project.description }}</div>
-
-<h2>Members</h2>
-
-<ul>
-{% for member in project.members %}
-    <li>{{ member.name }}</li>
-{% endfor %}
-</ul>
-
-{% if current_user.role == "admin" %}
-<form method="POST" action="{{ url_for('add_member', id=project.id) }}">
-    <select name="user_id">
-    {% for user in users %}
-      <option value="{{ user.id }}">{{ user.name }}</option>
-    {% endfor %}
-  </select>
-  <button type="submit">Add Member</button>
-</form>
-{% endif %}
-
-<h2>Tasks</h2>
-
-{% for task in project.tasks %}
-  <div>
-    <h4>{{ task.name }}</h4>
-    <p>{{ task.description }}</p>
-    <p>Priority: {{ task.priority }}</p>
-
-    {% if task.display_status == "Overdue" %}
-      <span style="color:red;">Overdue</span>
-    {% elif task.display_status == "Completed" %}
-      <span style="color:green;">Completed</span>
-    {% else %}
-      {{ task.display_status }}
-    {% endif %}
-
-    <p>Deadline: {{ task.deadline.strftime("%Y-%m-%d") }}</p>
-
-    <p>Assigned to:
-      {% for user in task.assignees %}
-        {{ user.name }}
-      {% endfor %}
-    </p>
-  </div>
-{% endfor %}
-
-<h3>Project Progress</h3>
-
-<div class="progress-container">
-  <div style="width: {{ project.progress_percentage }}%;" class="progress-bar">
+<div class="progress-wrapper">
+  <div class="progress-bar" style="width: {{ project.progress_percentage }}%;">
     {{ project.progress_percentage }}%
   </div>
 </div>
 
-<a href="{{ url_for('view_projects') }}">Back to Projects</a>
+<hr>
+
+{% if current_user.role == "admin" %}
+  <a href="{{ url_for('create_task', id=project.id) }}" class="btn btn-primary">
+    Create Task
+  </a>
+{% endif %}
+
+<hr>
+
+<h2>Tasks</h2>
+
+{% if project.tasks %}
+  {% for task in project.tasks %}
+    <div class="task-card">
+      <h3>{{ task.name }}</h3>
+      <p>{{ task.description }}</p>
+
+      <p><strong>Priority:</strong> {{ task.priority }}</p>
+      <p><strong>Deadline:</strong> {{ task.deadline or "No deadline" }}</p>
+      <p><strong>Status:</strong> {{ task.display_status }}</p>
+
+      <p><strong>Assigned to:</strong>
+        {% for user in task.assignees %}
+          {{ user.name }}{% if not loop.last %}, {% endif %}
+        {% endfor %}
+      </p>
+
+      <form method="POST" action="{{ url_for('update_task', id=task.id) }}">
+        <select name="status">
+          <option value="Pending">Pending</option>
+          <option value="Completed">Completed</option>
+        </select>
+        <button type="submit" class="btn btn-secondary">Update</button>
+      </form>
+
+    </div>
+    <hr>
+  {% endfor %}
+{% else %}
+  <p>No tasks yet.</p>
+{% endif %}
+
 {% endblock %}
