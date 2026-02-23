@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, User, Project, Task
+from helpers import admin_required
 from werkzeug.security import generate_password_hash, check_password_hash
-from functools import wraps
 from datetime import datetime
 import os
 
@@ -54,16 +54,6 @@ def register():
         return redirect(url_for('login'))
 
     return render_template('register.html')
-    
-def admin_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not current_user.is_authenticated:
-            return redirect(url_for("login"))
-        if current_user.role != "admin":
-            abort(403)
-        return f(*args, **kwargs)
-    return decorated_function
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
