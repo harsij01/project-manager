@@ -8,6 +8,8 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'default_development_key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+
 db.init_app(app)
 
 login_manager = LoginManager()
@@ -17,8 +19,6 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
 @app.route('/')
 def home():
@@ -35,7 +35,7 @@ def register():
         existing_email = User.query.filter_by(email=email).first()
 
         if existing_user or existing_email:
-            flash("Username or Email already exists")
+            flash("Username or Email already exists", "error")
             return redirect(url_for('register'))
 
         password_hash = generate_password_hash(password)
@@ -50,7 +50,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        flash("Registration Successful")
+        flash("Registration Successful", "success")
         return redirect(url_for('login'))
 
     return render_template('register.html')
@@ -65,10 +65,10 @@ def login():
         
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
-            flash("Login successful!")
+            flash("Login successful!", "success")
             return redirect(url_for('dashboard'))
         else:
-            flash("Incorrect email or password")
+            flash("Incorrect email or password", "error")
             return redirect(url_for('login'))
 
     return render_template('login.html')
@@ -77,7 +77,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash("Logged out successfully!")
+    flash("Logged out successfully!", "success")
     return redirect(url_for('login'))
 
 @app.route('/dashboard')
@@ -115,7 +115,7 @@ def create_project():
         db.session.add(new_project)
         db.session.commit()
 
-        flash("Project created successfully!")
+        flash("Project created successfully!", "success")
         return redirect(url_for("dashboard"))
 
     return render_template('create_project.html')
