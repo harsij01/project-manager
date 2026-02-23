@@ -10,7 +10,7 @@
 
 <ul>
 {% for member in project.members %}
-    <li>{{ member.username }}</li>
+    <li>{{ member.name }}</li>
 {% endfor %}
 </ul>
 
@@ -18,7 +18,7 @@
 <form method="POST" action="{{ url_for('add_member', id=project.id) }}">
     <select name="user_id">
     {% for user in users %}
-      <option value="{{ user.id }}">{{ user.username }}</option>
+      <option value="{{ user.id }}">{{ user.name }}</option>
     {% endfor %}
   </select>
   <button type="submit">Add Member</button>
@@ -29,7 +29,7 @@
 
 {% for task in project.tasks %}
   <div>
-    <h4>{{ task.title }}</h4>
+    <h4>{{ task.name }}</h4>
     <p>{{ task.description }}</p>
     <p>Priority: {{ task.priority }}</p>
 
@@ -45,11 +45,19 @@
 
     <p>Assigned to:
       {% for user in task.assignees %}
-        {{ user.username }}
+        {{ user.name }}
       {% endfor %}
     </p>
   </div>
 {% endfor %}
+
+<h3>Project Progress</h3>
+
+<div class="progress-container">
+  <div style="width: {{ project.progress_percentage }}%;" class="progress-bar">
+    {{ project.progress_percentage }}%
+  </div>
+</div>
 
 <a href="{{ url_for('view_projects') }}">Back to Projects</a>
 {% endblock %}

@@ -227,7 +227,7 @@ def project_details(id):
     if current_user.role != "admin" and current_user not in project.members:
         abort(403)
 
-    return render_template("project_details.html", project=project)
+    return render_template("project_details.html", project=project, users=users)
 
 @app.route('/projects/<int:id>/add_member', methods=["POST"])
 @login_required
