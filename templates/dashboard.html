@@ -8,6 +8,12 @@
     <p>Here’s a quick overview of your projects and tasks.</p>
 </section>
 
+{% if current_user.role == 'admin' %}
+  <div style="margin-bottom: 20px;">
+    <a href="{{ url_for('create_project') }}" class="btn btn-primary">Create New Project</a>
+  </div>
+{% endif %}
+
 <section class="projects-container">
     {% if projects %}
         {% for project in projects %}
