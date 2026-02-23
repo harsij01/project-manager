@@ -105,7 +105,7 @@ footer {
     margin: 5px 0;
 }
 
-.progress-container {
+.progress-wrapper {
     width: 100%;
     background-color: #eee;
     border-radius: 8px;
@@ -173,4 +173,11 @@ textarea {
 
 .btn-secondary:hover {
   background-color: #777;
+}
+
+.task-card {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
 }
