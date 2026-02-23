@@ -1,9 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from datetime import datetime
-from app import app
 
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 project_members = db.Table(
     "project_members",
@@ -83,4 +82,4 @@ class Task(db.Model):
         if self.deadline and self.status.lower() != "completed":
             if datetime.utcnow() > self.deadline:
                 return "Overdue"
-        return self.status
+        return self.status or "Pending"
