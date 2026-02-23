@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, abort
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from models import db, User, Project, Task
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from datetime import datetime
@@ -8,6 +8,7 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'default_development_key'
+db.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -18,87 +19,6 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-db = SQLAlchemy(app)
-
-project_members = db.Table(
-    "project_members",
-    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
-    db.Column("project_id", db.Integer, db.ForeignKey("project.id"))
-)
-
-task_assignees = db.Table(
-    "task_assignees",
-    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
-    db.Column("task_id", db.Integer, db.ForeignKey("task.id"))
-)
-
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False, unique=True)
-    role = db.Column(db.String(20), nullable=False, default="member")
-    password_hash = db.Column(db.String(300), nullable=False)
-
-    projects = db.relationship(
-        "Project",
-        secondary=project_members,
-        back_populates="members"
-    )
-
-class Project(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), nullable=False)
-    created_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    description = db.Column(db.String(300))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    members = db.relationship(
-        "User",
-        secondary=project_members,
-        back_populates="projects"
-    )
-
-    @property
-    def progress_percentage(self):
-        total_tasks = len(self.tasks)
-        if total_tasks == 0:
-            return 0
-
-        completed_tasks = len(
-            [task for task in self.tasks if task.status.lower() == "completed"]
-        )
-
-        return round((completed_tasks / total_tasks) * 100)
-
-class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), nullable=False)
-    description = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    priority = db.Column(db.String(50))
-    status = db.Column(db.String(50), default="Pending")
-
-    deadline = db.Column(db.DateTime)
-
-    project_id = db.Column(db.Integer, db.ForeignKey("project.id"), nullable=False)
-    project = db.relationship(
-        "Project",
-        backref=db.backref("tasks", cascade="all, delete-orphan")
-    )
-
-    assignees = db.relationship(
-        "User",
-        secondary=task_assignees,
-        backref="tasks"
-    )
-
-    @property
-    def display_status(self):
-        if self.deadline and self.status.lower() != "completed":
-            if datetime.utcnow() > self.deadline:
-                return "Overdue"
-        return self.status
 
 @app.route('/')
 def home():
