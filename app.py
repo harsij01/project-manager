@@ -7,7 +7,7 @@ from datetime import datetime
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'default_developement_key'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'default_development_key'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
