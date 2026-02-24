@@ -21,6 +21,36 @@
 
 <hr>
 
+<h3>Project Members</h3>
+
+<ul>
+  {% for member in project.members %}
+    <li>{{ member.name }} ({{ member.email }})</li>
+  {% endfor %}
+</ul>
+
+{% if current_user.role == "admin" %}
+<hr>
+<h3>Add Member to Project</h3>
+
+<form method="POST" action="{{ url_for('add_member', id=project.id) }}">
+  <select name="user_id" required>
+    <option value="">-- Select User --</option>
+
+    {% for user in users %}
+      {% if user not in project.members %}
+        <option value="{{ user.id }}">{{ user.name }} ({{ user.email }})</option>
+      {% endif %}
+    {% endfor %}
+
+  </select>
+
+  <button type="submit" class="btn btn-primary">Add Member</button>
+</form>
+{% endif %}
+
+<hr>
+
 <h2>Tasks</h2>
 
 {% if project.tasks %}
@@ -31,7 +61,12 @@
 
       <p><strong>Priority:</strong> {{ task.priority }}</p>
       <p><strong>Deadline:</strong> {{ task.deadline or "No deadline" }}</p>
-      <p><strong>Status:</strong> {{ task.display_status }}</p>
+      <p>
+        <strong>Status:</strong>
+        <span class="status-{{ task.display_status|lower }}">
+        {{ task.display_status }}
+        </span>
+      </p>
 
       <p><strong>Assigned to:</strong>
         {% for user in task.assignees %}
