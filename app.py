@@ -4,6 +4,7 @@ from models import db, User, Project, Task
 from helpers import admin_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+import re
 import os
 
 app = Flask(__name__)
