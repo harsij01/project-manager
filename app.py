@@ -155,7 +155,19 @@ def project_details(id):
         abort(403)
 
     users = User.query.all()
-    return render_template("project_details.html", project=project, users=users)
+
+    todo_tasks = Task.query.filter_by(id=id, status="To Do").all()
+    inprogress_tasks = Task.query.filter_by(id=id, status="In Progress").all()
+    done_tasks = Task.query.filter_by(id=id, status="Done").all()
+
+    return render_template(
+        "project_details.html",
+        project=project,
+        users=users,
+        todo_tasks=todo_tasks,
+        inprogress_tasks=inprogress_tasks,
+        done_tasks=done_tasks
+    )
 
 @app.route('/projects/<int:id>/add_member', methods=["POST"])
 @login_required

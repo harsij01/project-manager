@@ -21,6 +21,38 @@
 
 <hr>
 
+<div class="kanban-board">
+    <div class="kanban-column">
+        <h3>To Do</h3>
+        {% for task in todo_tasks %}
+            <div class="task-card">
+                <h4>{{ task.name }}</h4>
+                <p>{{ task.description }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="kanban-column">
+        <h3>In Progress</h3>
+        {% for task in inprogress_tasks %}
+            <div class="task-card">
+                <h4>{{ task.name }}</h4>
+                <p>{{ task.description }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="kanban-column">
+        <h3>Done</h3>
+        {% for task in done_tasks %}
+            <div class="task-card">
+                <h4>{{ task.name }}</h4>
+                <p>{{ task.description }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
 <h3>Project Members</h3>
 
 <ul>
