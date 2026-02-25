@@ -208,21 +208,6 @@ textarea {
     transform: translateY(-2px);
 }
 
-.status-completed {
-  color: green;
-  font-weight: bold;
-}
-
-.status-pending {
-  color: orange;
-  font-weight: bold;
-}
-
-.status-overdue {
-  color: red;
-  font-weight: bold;
-}
-
 select {
   width: 100%;
   padding: 10px;

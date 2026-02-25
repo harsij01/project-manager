@@ -49,7 +49,7 @@ class Project(db.Model):
             return 0
 
         completed_tasks = len(
-            [task for task in self.tasks if task.status.lower() == "completed"]
+            [task for task in self.tasks if task.status.lower() == "done"]
         )
 
         return round((completed_tasks / total_tasks) * 100)
@@ -62,6 +62,7 @@ class Task(db.Model):
 
     priority = db.Column(db.String(50))
     status = db.Column(db.String(50), default="To Do")
+    ALLOWED_STATUSES = ["To Do", "In Progress", "Done"]
 
     deadline = db.Column(db.DateTime)
 
@@ -79,7 +80,7 @@ class Task(db.Model):
 
     @property
     def display_status(self):
-        if self.deadline and self.status.lower() != "completed":
+        if self.deadline and self.status.lower() != "done":
             if datetime.utcnow() > self.deadline:
                 return "Overdue"
         return self.status or "To Do"
