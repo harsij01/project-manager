@@ -141,15 +141,6 @@ def create_project():
 
     return render_template('create_project.html')
 
-@app.route('/projects')
-@login_required
-def view_projects():
-    if current_user.role == "admin":
-        projects = Project.query.all()
-    else:
-        projects = current_user.projects
-    return render_template("projects.html", projects=projects)
-
 @app.route('/projects/<int:id>')
 @login_required
 def project_details(id):
