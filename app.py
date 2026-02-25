@@ -156,9 +156,9 @@ def project_details(id):
 
     users = User.query.all()
 
-    todo_tasks = Task.query.filter_by(id=id, status="To Do").all()
-    inprogress_tasks = Task.query.filter_by(id=id, status="In Progress").all()
-    done_tasks = Task.query.filter_by(id=id, status="Done").all()
+    todo_tasks = Task.query.filter_by(project_id=id, status="To Do").all()
+    inprogress_tasks = Task.query.filter_by(project_id=id, status="In Progress").all()
+    done_tasks = Task.query.filter_by(project_id=id, status="Done").all()
 
     return render_template(
         "project_details.html",
