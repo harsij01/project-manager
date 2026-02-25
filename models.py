@@ -61,7 +61,7 @@ class Task(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     priority = db.Column(db.String(50))
-    status = db.Column(db.String(50), default="Pending")
+    status = db.Column(db.String(50), default="To Do")
 
     deadline = db.Column(db.DateTime)
 
@@ -82,4 +82,4 @@ class Task(db.Model):
         if self.deadline and self.status.lower() != "completed":
             if datetime.utcnow() > self.deadline:
                 return "Overdue"
-        return self.status or "Pending"
+        return self.status or "To Do"
