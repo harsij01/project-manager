@@ -22,34 +22,40 @@
 <hr>
 
 <div class="kanban-board">
-    <div class="kanban-column">
-        <h3>To Do</h3>
-        {% for task in todo_tasks %}
-            <div class="task-card">
-                <h4>{{ task.name }}</h4>
-                <p>{{ task.description }}</p>
-            </div>
-        {% endfor %}
+    <div class="kanban-column" data-status="To Do" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h3>To Do</h3>
+      <div class="kanban-tasks" id="todo-tasks">
+      {% for task in todo_tasks %}
+        <div class="task-card" draggable="true" id="task-{{ task.id }}" ondragstart="drag(event)">
+          <h4>{{ task.name }}</h4>
+          <p>{{ task.description }}</p>
+        </div>
+      {% endfor %}
+      </div>
     </div>
 
-    <div class="kanban-column">
-        <h3>In Progress</h3>
-        {% for task in inprogress_tasks %}
-            <div class="task-card">
-                <h4>{{ task.name }}</h4>
-                <p>{{ task.description }}</p>
-            </div>
-        {% endfor %}
+    <div class="kanban-column" data-status="In Progress" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h3>In Progress</h3>
+      <div class="kanban-tasks" id="inprogress-tasks">
+      {% for task in inprogress_tasks %}
+        <div class="task-card" draggable="true" id="task-{{ task.id }}" ondragstart="drag(event)">
+          <h4>{{ task.name }}</h4>
+          <p>{{ task.description }}</p>
+        </div>
+      {% endfor %}
+      </div>
     </div>
 
-    <div class="kanban-column">
+    <div class="kanban-column" data-status="Done" ondrop="drop(event)" ondragover="allowDrop(event)">
         <h3>Done</h3>
+        <div class="kanban-tasks" id="done-tasks">
         {% for task in done_tasks %}
-            <div class="task-card">
-                <h4>{{ task.name }}</h4>
-                <p>{{ task.description }}</p>
-            </div>
+          <div class="task-card" draggable="true" id="task-{{ task.id }}" ondragstart="drag(event)">
+            <h4>{{ task.name }}</h4>
+            <p>{{ task.description }}</p>
+          </div>
         {% endfor %}
+      </div>
     </div>
 </div>
 
@@ -81,45 +87,5 @@
 </form>
 {% endif %}
 
-<hr>
-
-<h2>Tasks</h2>
-
-{% if project.tasks %}
-  {% for task in project.tasks %}
-    <div class="task-card">
-      <h3>{{ task.name }}</h3>
-      <p>{{ task.description }}</p>
-
-      <p><strong>Priority:</strong> {{ task.priority }}</p>
-      <p><strong>Deadline:</strong> {{ task.deadline or "No deadline" }}</p>
-      <p>
-        <strong>Status:</strong>
-        <span class="status-{{ task.display_status|lower }}">
-        {{ task.display_status }}
-        </span>
-      </p>
-
-      <p><strong>Assigned to:</strong>
-        {% for user in task.assignees %}
-          {{ user.name }}{% if not loop.last %}, {% endif %}
-        {% endfor %}
-      </p>
-
-      <form method="POST" action="{{ url_for('update_task', id=task.id) }}">
-        <select name="status">
-          <option value="To Do">To Do</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Done">Done</option>
-        </select>
-        <button type="submit" class="btn btn-secondary">Update</button>
-      </form>
-
-    </div>
-    <hr>
-  {% endfor %}
-{% else %}
-  <p>No tasks yet.</p>
-{% endif %}
-
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 {% endblock %}

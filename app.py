@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, abort
+from flask import Flask, render_template, request, flash, redirect, url_for, abort, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, User, Project, Task
 from helpers import admin_required
@@ -210,7 +210,8 @@ def create_task(id):
             description=description,
             priority=priority,
             deadline=deadline,
-            project=project
+            project=project,
+            status="To Do"
         )
 
         user_ids = request.form.getlist("assignees")
@@ -232,18 +233,21 @@ def create_task(id):
 def update_task(id):
     task = Task.query.get_or_404(id)
 
-    if current_user.role != "admin" and current_user not in task.assignees:
-        abort(403)
+    if current_user.role != "admin" and current_user not in task.project.members:
+        return jsonify(success=False), 403
 
-    allowed_statuses = ["To Do", "In Progress", "Done"]
-    new_status = request.form.get("status")
+    data = request.get_json()
+    if not data or "status" not in data:
+        return jsonify(success=False), 400
 
-    if new_status in allowed_statuses:
+    new_status = data["status"]
+
+    if new_status in Task.ALLOWED_STATUSES:
         task.status = new_status
-    
-    db.session.commit()
+        db.session.commit()
+        return jsonify(success=True)
 
-    return redirect(url_for("project_details", id=task.project_id))
+    return jsonify(success=False), 400
 
 if __name__ == "__main__":
     app.run(debug=True)

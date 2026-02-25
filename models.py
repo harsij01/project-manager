@@ -48,9 +48,7 @@ class Project(db.Model):
         if total_tasks == 0:
             return 0
 
-        completed_tasks = len(
-            [task for task in self.tasks if task.status.lower() == "done"]
-        )
+        completed_tasks = len([task for task in self.tasks if task.status.strip().lower() == "done"])
 
         return round((completed_tasks / total_tasks) * 100)
 
@@ -61,7 +59,7 @@ class Task(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     priority = db.Column(db.String(50))
-    status = db.Column(db.String(50), default="To Do")
+    status = db.Column(db.String(50), default="To Do", nullable=False)
     ALLOWED_STATUSES = ["To Do", "In Progress", "Done"]
 
     deadline = db.Column(db.DateTime)
