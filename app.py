@@ -8,7 +8,7 @@ import re
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'default_development_key'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
 db.init_app(app)
@@ -23,7 +23,7 @@ def load_user(user_id):
 
 @app.route('/')
 def home():
-    return render_template('layout.html')
+    return render_template('home.html')
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
