@@ -19,7 +19,7 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
 
 @app.route('/')
 def home():
@@ -31,6 +31,10 @@ def register():
         username = request.form["username"]
         email = request.form["email"]
         password = request.form["password"]
+
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            flash("Invalid email format", "error")
+            return redirect(url_for("register"))
 
         if len(password) < 8:
             flash("Password must be at least 8 characters long.", "error")
@@ -231,7 +235,12 @@ def update_task(id):
     if current_user.role != "admin" and current_user not in task.assignees:
         abort(403)
 
-    task.status = request.form.get("status")
+    allowed_statuses = ["To Do", "In Progress", "Done"]
+    new_status = request.form.get("status")
+
+    if new_status in allowed_statuses:
+        task.status = new_status
+    
     db.session.commit()
 
     return redirect(url_for("project_details", id=task.project_id))
