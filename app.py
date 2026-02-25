@@ -111,12 +111,6 @@ def dashboard():
 
     return render_template("dashboard.html", projects=projects)
 
-@app.route('/admin_panel')
-@login_required
-@admin_required
-def admin_panel():
-    return render_template("admin_panel.html")
-
 @app.route('/project/create', methods=["GET", "POST"])
 @login_required
 @admin_required
