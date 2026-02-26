@@ -82,3 +82,20 @@ class Task(db.Model):
             if datetime.utcnow() > self.deadline:
                 return "Overdue"
         return self.status or "To Do"
+
+class ActivityLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    action = db.Column(db.String(200), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Who performed the action
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user = db.relationship("User")
+
+    # Which project it belongs to
+    project_id = db.Column(db.Integer, db.ForeignKey("project.id"), nullable=False)
+    project = db.relationship(
+        "Project",
+        backref=db.backref("activity_logs", cascade="all, delete-orphan")
+    )

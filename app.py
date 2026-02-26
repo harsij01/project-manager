@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, abort, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from models import db, User, Project, Task
+from models import db, User, Project, Task, ActivityLog
 from helpers import admin_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -130,6 +130,14 @@ def create_project():
         db.session.add(new_project)
         db.session.commit()
 
+        log = ActivityLog(
+            action=f"Project '{name}' was created",
+            user=current_user,
+            project=new_project
+        )
+        db.session.add(log)
+        db.session.commit()
+
         flash("Project created successfully!", "success")
         return redirect(url_for("dashboard"))
 
@@ -208,6 +216,14 @@ def create_task(id):
         db.session.add(task)
         db.session.commit()
 
+        log = ActivityLog(
+            action=f"Task '{task.name}' was created",
+            user=current_user,
+            project=project
+        )
+        db.session.add(log)
+        db.session.commit()
+
         return redirect(url_for("project_details", id=id))
     
     members = project.members
@@ -230,9 +246,36 @@ def update_task(id):
     if new_status in Task.ALLOWED_STATUSES:
         task.status = new_status
         db.session.commit()
+
+        old_status = task.status
+        task.status = new_status
+        db.session.commit()
+
+        log = ActivityLog(
+            action=f"Task '{task.name}' moved from {old_status} to {new_status}",
+            user=current_user,
+            project=task.project
+        )
+        db.session.add(log)
+        db.session.commit()
+
         return jsonify(success=True)
 
     return jsonify(success=False), 400
+
+@app.route('/projects/<int:id>/timeline')
+@login_required
+def project_timeline(id):
+    project = Project.query.get_or_404(id)
+
+    if current_user.role != "admin" and current_user not in project.members:
+        abort(403)
+
+    logs = ActivityLog.query.filter_by(project_id=id)\
+                .order_by(ActivityLog.timestamp.desc())\
+                .all()
+
+    return render_template("project_timeline.html", project=project, logs=logs)
 
 if __name__ == "__main__":
     app.run(debug=True)

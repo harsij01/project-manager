@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>{{ project.name }} - Activity Timeline</h2>
+
+<div class="timeline">
+    {% for log in logs %}
+        <div class="timeline-item">
+            <div class="timeline-time">
+                {{ log.timestamp.strftime("%Y-%m-%d %H:%M") }}
+            </div>
+            <div class="timeline-content">
+                <strong>{{ log.user.name }}</strong> - {{ log.action }}
+            </div>
+        </div>
+    {% else %}
+        <p>No activity yet.</p>
+    {% endfor %}
+</div>
+
+<a href="{{ url_for('project_details', id=project.id) }}">
+    Back to Project
+</a>
+{% endblock %}
