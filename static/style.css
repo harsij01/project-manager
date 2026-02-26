@@ -300,3 +300,63 @@ small {
 .auth-link a:hover {
     text-decoration: underline;
 }
+
+.analytics-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.analytics-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.analytics-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease;
+}
+
+.analytics-card:hover {
+    transform: translateY(-4px);
+}
+
+.analytics-card h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.analytics-card canvas {
+    width: 100% !important;
+    height: 300px !important;
+}
+
+.metric-card {
+    text-align: center;
+}
+
+.metric-value {
+    font-size: 36px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.metric-label {
+    font-size: 14px;
+    color: #666;
+}
+
+body {
+    background-color: #f5f7fa;
+}

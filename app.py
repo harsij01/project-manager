@@ -276,5 +276,54 @@ def project_timeline(id):
 
     return render_template("project_timeline.html", project=project, logs=logs)
 
+@app.route('/projects/<int:id>/analytics')
+@login_required
+def project_analytics(id):
+    project = Project.query.get_or_404(id)
+
+    if current_user.role != "admin" and current_user not in project.members:
+        abort(403)
+
+    tasks = project.tasks
+
+    # Completed tasks per user
+    completed_tasks = [t for t in tasks if t.status.lower() == "done"]
+
+    completed_per_user = {}
+    for task in completed_tasks:
+        for user in task.assignees:
+            completed_per_user[user.name] = completed_per_user.get(user.name, 0) + 1
+
+    # Overdue tasks
+    overdue_count = len([
+        t for t in tasks
+        if t.deadline and t.status.lower() != "done" and datetime.utcnow() > t.deadline
+    ])
+
+    # High priority tasks
+    high_priority_count = len([
+        t for t in tasks if t.priority and t.priority.lower() == "high"
+    ])
+
+    # Average completion time (in days)
+    completion_times = []
+    for task in completed_tasks:
+        if task.created_at and task.deadline:
+            delta = task.deadline - task.created_at
+            completion_times.append(delta.days)
+
+    avg_completion_time = round(
+        sum(completion_times) / len(completion_times), 2
+    ) if completion_times else 0
+
+    return render_template(
+        "project_analytics.html",
+        project=project,
+        completed_per_user=completed_per_user,
+        overdue_count=overdue_count,
+        high_priority_count=high_priority_count,
+        avg_completion_time=avg_completion_time
+    )
+
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="analytics-container">
+    <h2 class="analytics-title">{{ project.name }} - Analytics</h2>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Pass data safely using data attributes -->
+    <div id="analytics-data"
+        data-labels='{{ completed_per_user.keys() | list | tojson }}'
+        data-values='{{ completed_per_user.values() | list | tojson }}'
+        data-overdue="{{ overdue_count }}"
+        data-high="{{ high_priority_count }}"
+        data-avg="{{ avg_completion_time }}">
+    </div>
+
+    <div class="analytics-grid">
+
+        <div class="analytics-card">
+            <h3>Completed Tasks Per User</h3>
+            <canvas id="completedChart"></canvas>
+        </div>
+
+        <div class="analytics-card">
+            <h3>Task Health</h3>
+            <canvas id="healthChart"></canvas>
+        </div>
+
+        <div class="analytics-card">
+            <h3>Average Completion Time</h3>
+            <canvas id="avgChart"></canvas>
+        </div>
+
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+{% endblock %}
