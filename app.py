@@ -244,20 +244,19 @@ def update_task(id):
     new_status = data["status"]
 
     if new_status in Task.ALLOWED_STATUSES:
-        task.status = new_status
-        db.session.commit()
+        old_status = task.status   # save BEFORE changing
 
-        old_status = task.status
-        task.status = new_status
-        db.session.commit()
+        if old_status != new_status:
+            task.status = new_status
 
-        log = ActivityLog(
-            action=f"Task '{task.name}' moved from {old_status} to {new_status}",
-            user=current_user,
-            project=task.project
-        )
-        db.session.add(log)
-        db.session.commit()
+            log = ActivityLog(
+                action=f"Task '{task.name}' moved from {old_status} to {new_status}",
+                user=current_user,
+                project=task.project
+            )
+
+            db.session.add(log)
+            db.session.commit()
 
         return jsonify(success=True)
 
