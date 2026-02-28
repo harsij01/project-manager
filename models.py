@@ -18,7 +18,7 @@ task_assignees = db.Table(
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), nullable=False, unique=True)
     email = db.Column(db.String(100), nullable=False, unique=True)
     role = db.Column(db.String(20), nullable=False, default="member")
     password_hash = db.Column(db.String(300), nullable=False)
