@@ -57,6 +57,7 @@ class Task(db.Model):
     name = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    completed_at = db.Column(db.DateTime)
 
     priority = db.Column(db.String(50))
     status = db.Column(db.String(50), default="To Do", nullable=False)

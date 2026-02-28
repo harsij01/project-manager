@@ -243,6 +243,9 @@ def update_task(id):
 
     new_status = data["status"]
 
+    if new_status == "Done":
+        task.completed_at = datetime.utcnow()
+
     if new_status in Task.ALLOWED_STATUSES:
         old_status = task.status   # save BEFORE changing
 
@@ -308,8 +311,8 @@ def project_analytics(id):
     # Average completion time (in days)
     completion_times = []
     for task in completed_tasks:
-        if task.created_at and task.deadline:
-            delta = task.deadline - task.created_at
+        if task.created_at and task.completed_at:
+            delta = task.completed_at - task.created_at
             completion_times.append(delta.days)
 
     avg_completion_time = round(
