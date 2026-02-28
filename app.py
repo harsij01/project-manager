@@ -290,7 +290,7 @@ def project_analytics(id):
     tasks = project.tasks
 
     # Completed tasks per user
-    completed_tasks = [t for t in tasks if t.status.lower() == "done"]
+    completed_tasks = Task.query.filter_by(project_id=id, status="Done").all()
 
     completed_per_user = {}
     for task in completed_tasks:
