@@ -30,6 +30,42 @@
 
 <hr>
 
+<form method="GET" class="filter-form">
+
+  <input type="text" name="search" placeholder="Search task title"
+         value="{{ request.args.get('search', '') }}">
+
+  <select name="priority">
+    <option value="">All Priorities</option>
+    <option value="Low" {% if request.args.get('priority') == 'Low' %}selected{% endif %}>Low</option>
+    <option value="Medium" {% if request.args.get('priority') == 'Medium' %}selected{% endif %}>Medium</option>
+    <option value="High" {% if request.args.get('priority') == 'High' %}selected{% endif %}>High</option>
+  </select>
+
+  <select name="status">
+    <option value="">All Status</option>
+    <option value="To Do" {% if request.args.get('status') == 'To Do' %}selected{% endif %}>To Do</option>
+    <option value="In Progress" {% if request.args.get('status') == 'In Progress' %}selected{% endif %}>In Progress</option>
+    <option value="Done" {% if request.args.get('status') == 'Done' %}selected{% endif %}>Done</option>
+  </select>
+
+  <select name="assigned_user">
+    <option value="">All Users</option>
+    {% for member in project.members %}
+      <option value="{{ member.id }}"
+        {% if request.args.get('assigned_user') == member.id|string %}selected{% endif %}>
+        {{ member.name }}
+      </option>
+    {% endfor %}
+  </select>
+
+  <button type="submit" class="btn btn-primary">Apply Filters</button>
+  <a href="{{ url_for('project_details', id=project.id) }}" class="btn btn-secondary">Clear</a>
+
+</form>
+
+<hr>
+
 <div class="kanban-board">
     <div class="kanban-column" data-status="To Do" ondrop="drop(event)" ondragover="allowDrop(event)">
       <h3>To Do</h3>

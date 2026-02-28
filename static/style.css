@@ -360,3 +360,21 @@ small {
 body {
     background-color: #f5f7fa;
 }
+
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.filter-form input,
+.filter-form select {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.filter-form button {
+  padding: 8px 15px;
+}
