@@ -40,3 +40,23 @@ A full-stack project management web application built with Flask, SQLAlchemy, an
 - Card-based layout
 - Smooth hover animations
 - Clean SaaS-inspired interface
+
+---
+
+## Tech Stack
+Backend
+
+- Flask
+- Flask-SQLAlchemy
+- Flask-Login
+- Flask-WTF
+- SQLite (development database)
+
+Frontend
+
+- HTML5
+- CSS3 (custom styling system)
+- Vanilla JavaScript
+- Chart.js
+
+---
