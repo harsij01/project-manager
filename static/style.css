@@ -471,3 +471,31 @@ a {
     padding: 40px 20px;
   }
 }
+
+/* AUTH CARD (smaller width) */
+.auth-card {
+  max-width: 420px;
+}
+
+/* FULL WIDTH BUTTON */
+.full-width {
+  width: 100%;
+}
+
+/* AUTH LINK */
+.auth-link {
+  margin-top: 15px;
+  font-size: 14px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.auth-link a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-link a:hover {
+  text-decoration: underline;
+}
