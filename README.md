@@ -113,6 +113,8 @@ http://127.0.0.1:5000/
 - Secure form validation
 - Protected POST routes
 
+---
+
 ## Database Setup
 
 This project uses **Flask** with **SQLAlchemy** for database management. Follow these steps to create and populate the database:
@@ -159,3 +161,22 @@ with app.app_context():
     db.session.add(admin)
     db.session.commit()
 ```
+
+---
+
+## Screenshots
+
+### Home page
+![Home](screenshots/home.png)
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Project Details
+![Project Details](screenshots/project_details.png)
+
+### Project Analytics
+![Project Analytics](screenshots/project_analytics.png)
+
+### Project Timeline
+![Project Timeline](screenshots/project_timeline.png)
