@@ -1,24 +1,46 @@
 {% extends "layout.html" %}
 
+{% block title %}Activity Timeline{% endblock %}
+
 {% block content %}
-<h2>{{ project.name }} - Activity Timeline</h2>
 
-<div class="timeline">
+<section class="timeline-page">
+
+  <div class="timeline-header">
+    <h2>{{ project.name }} - Activity Timeline</h2>
+    <a href="{{ url_for('project_details', id=project.id) }}" 
+       class="btn btn-secondary">
+       Back to Project
+    </a>
+  </div>
+
+  <div class="timeline">
+
     {% for log in logs %}
-        <div class="timeline-item">
-            <div class="timeline-time">
-                {{ log.timestamp.strftime("%Y-%m-%d %H:%M") }}
-            </div>
-            <div class="timeline-content">
-                <strong>{{ log.user.name }}</strong> - {{ log.action }}
-            </div>
-        </div>
-    {% else %}
-        <p>No activity yet.</p>
-    {% endfor %}
-</div>
+      <div class="timeline-item">
 
-<a href="{{ url_for('project_details', id=project.id) }}">
-    Back to Project
-</a>
+        <div class="timeline-dot"></div>
+
+        <div class="timeline-card">
+          <div class="timeline-time">
+            {{ log.timestamp.strftime("%Y-%m-%d %H:%M") }}
+          </div>
+
+          <div class="timeline-content">
+            <strong>{{ log.user.name }}</strong>
+            <span class="muted">— {{ log.action }}</span>
+          </div>
+        </div>
+
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <p>No activity yet.</p>
+      </div>
+    {% endfor %}
+
+  </div>
+
+</section>
+
 {% endblock %}
