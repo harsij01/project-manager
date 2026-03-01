@@ -31,10 +31,7 @@
 <hr>
 
 <form method="GET" class="filter-form">
-
-  <input type="text" name="search" placeholder="Search task title"
-         value="{{ request.args.get('search', '') }}">
-
+  <!-- Priority Filter -->
   <select name="priority">
     <option value="">All Priorities</option>
     <option value="Low" {% if request.args.get('priority') == 'Low' %}selected{% endif %}>Low</option>
@@ -42,6 +39,7 @@
     <option value="High" {% if request.args.get('priority') == 'High' %}selected{% endif %}>High</option>
   </select>
 
+  <!-- Status Filter -->
   <select name="status">
     <option value="">All Status</option>
     <option value="To Do" {% if request.args.get('status') == 'To Do' %}selected{% endif %}>To Do</option>
@@ -49,6 +47,7 @@
     <option value="Done" {% if request.args.get('status') == 'Done' %}selected{% endif %}>Done</option>
   </select>
 
+  <!-- Assigned User Filter -->
   <select name="assigned_user">
     <option value="">All Users</option>
     {% for member in project.members %}
@@ -59,9 +58,8 @@
     {% endfor %}
   </select>
 
-  <button type="submit" class="btn btn-primary">Apply Filters</button>
+  <button type="submit" class="btn btn-primary">Apply</button>
   <a href="{{ url_for('project_details', id=project.id) }}" class="btn btn-secondary">Clear</a>
-
 </form>
 
 <hr>
