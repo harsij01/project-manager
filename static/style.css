@@ -363,18 +363,13 @@ body {
 
 .filter-form {
   display: flex;
-  flex-wrap: wrap;
   gap: 10px;
+  flex-wrap: wrap;
   margin: 20px 0;
 }
 
-.filter-form input,
 .filter-form select {
   padding: 8px;
   border-radius: 5px;
   border: 1px solid #ccc;
-}
-
-.filter-form button {
-  padding: 8px 15px;
 }
