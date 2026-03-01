@@ -124,8 +124,6 @@ def dashboard():
         completed_projects=completed_projects
     )
 
-    return render_template("dashboard.html", projects=projects)
-
 @app.route('/project/create', methods=["GET", "POST"])
 @login_required
 @admin_required
@@ -195,7 +193,8 @@ def project_details(id):
         users=users,
         todo_tasks=todo_tasks,
         inprogress_tasks=inprogress_tasks,
-        done_tasks=done_tasks
+        done_tasks=done_tasks,
+        datetime=datetime
     )
 
 @app.route('/projects/<int:id>/add_member', methods=["POST"])

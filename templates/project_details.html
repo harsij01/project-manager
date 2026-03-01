@@ -76,10 +76,47 @@
       <h3>To Do</h3>
       <div class="kanban-tasks">
         {% for task in todo_tasks %}
-          <div class="task-card" draggable="true"
-              id="task-{{ task.id }}" ondragstart="drag(event)">
+          {% set is_overdue = task.deadline 
+              and task.status != "Done" 
+              and task.deadline < datetime.utcnow() %}
+
+          <div class="task-card 
+              {% if is_overdue %}overdue{% endif %}"
+              draggable="true"
+              id="task-{{ task.id }}" 
+              ondragstart="drag(event)">
+
             <h4>{{ task.name }}</h4>
             <p class="muted">{{ task.description }}</p>
+
+            <!-- PRIORITY BADGE -->
+            {% if task.priority %}
+              <span class="badge badge-{{ task.priority|lower }}">
+                {{ task.priority }}
+              </span>
+            {% endif %}
+
+            <!-- DEADLINE -->
+            {% if task.deadline %}
+              <p class="task-deadline {% if is_overdue %}overdue-text{% endif %}">
+                Due: {{ task.deadline.strftime("%Y-%m-%d") }}
+              </p>
+            {% endif %}
+
+            <!-- ASSIGNED USERS -->
+            {% if task.assignees %}
+              <div class="assignees">
+                {% for user in task.assignees %}
+                  <span class="assignee">{{ user.name }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+            
+            <!-- OVERDUE LABEL -->
+            {% if is_overdue %}
+              <span class="badge badge-overdue">Overdue</span>
+            {% endif %}
+
           </div>
         {% endfor %}
       </div>
@@ -90,10 +127,47 @@
       <h3>In Progress</h3>
       <div class="kanban-tasks">
         {% for task in inprogress_tasks %}
-          <div class="task-card" draggable="true"
-              id="task-{{ task.id }}" ondragstart="drag(event)">
+          {% set is_overdue = task.deadline 
+              and task.status != "Done" 
+              and task.deadline < datetime.utcnow() %}
+
+          <div class="task-card 
+              {% if is_overdue %}overdue{% endif %}"
+              draggable="true"
+              id="task-{{ task.id }}" 
+              ondragstart="drag(event)">
+
             <h4>{{ task.name }}</h4>
             <p class="muted">{{ task.description }}</p>
+
+            <!-- PRIORITY BADGE -->
+            {% if task.priority %}
+              <span class="badge badge-{{ task.priority|lower }}">
+                {{ task.priority }}
+              </span>
+            {% endif %}
+
+            <!-- DEADLINE -->
+            {% if task.deadline %}
+              <p class="task-deadline {% if is_overdue %}overdue-text{% endif %}">
+                Due: {{ task.deadline.strftime("%Y-%m-%d") }}
+              </p>
+            {% endif %}
+
+            <!-- ASSIGNED USERS -->
+            {% if task.assignees %}
+              <div class="assignees">
+                {% for user in task.assignees %}
+                  <span class="assignee">{{ user.name }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <!-- OVERDUE LABEL -->
+            {% if is_overdue %}
+              <span class="badge badge-overdue">Overdue</span>
+            {% endif %}
+            
           </div>
         {% endfor %}
       </div>
@@ -104,10 +178,47 @@
       <h3>Done</h3>
       <div class="kanban-tasks">
         {% for task in done_tasks %}
-          <div class="task-card" draggable="true"
-              id="task-{{ task.id }}" ondragstart="drag(event)">
+          {% set is_overdue = task.deadline 
+              and task.status != "Done" 
+              and task.deadline < datetime.utcnow() %}
+
+          <div class="task-card 
+              {% if is_overdue %}overdue{% endif %}"
+              draggable="true"
+              id="task-{{ task.id }}" 
+              ondragstart="drag(event)">
+
             <h4>{{ task.name }}</h4>
             <p class="muted">{{ task.description }}</p>
+
+            <!-- PRIORITY BADGE -->
+            {% if task.priority %}
+              <span class="badge badge-{{ task.priority|lower }}">
+                {{ task.priority }}
+              </span>
+            {% endif %}
+
+            <!-- DEADLINE -->
+            {% if task.deadline %}
+              <p class="task-deadline {% if is_overdue %}overdue-text{% endif %}">
+                Due: {{ task.deadline.strftime("%Y-%m-%d") }}
+              </p>
+            {% endif %}
+
+            <!-- ASSIGNED USERS -->
+            {% if task.assignees %}
+              <div class="assignees">
+                {% for user in task.assignees %}
+                  <span class="assignee">{{ user.name }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <!-- OVERDUE LABEL -->
+            {% if is_overdue %}
+              <span class="badge badge-overdue">Overdue</span>
+            {% endif %}
+            
           </div>
         {% endfor %}
       </div>

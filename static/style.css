@@ -27,7 +27,7 @@ body {
 }
 
 .site-header {
-  background: white;
+  background: #ffffff;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   position: sticky;
   top: 0;
@@ -58,7 +58,6 @@ body {
 
 .nav-links a {
   text-decoration: none;
-  color: #374151;
   font-weight: 500;
   transition: color 0.2s ease;
 }
@@ -118,19 +117,6 @@ body {
   max-width: 75%;
   margin: auto;
   padding: 40px;
-}
-
-.btn-primary {
-  background: var(--primary);
-  color: white;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 500;
-}
-
-.btn-primary:hover {
-  background: var(--primary-dark);
 }
 
 /* HERO */
@@ -224,6 +210,19 @@ body {
 }
 
 /* BUTTONS */
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
 .btn {
   padding: 8px 14px;
   border-radius: 8px;
@@ -319,12 +318,74 @@ body {
   border-radius: 8px;
   margin-bottom: 10px;
   cursor: grab;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   transition: all 0.2s ease;
 }
 
 .task-card:hover {
   background: #eef2ff;
   transform: translateY(-2px);
+}
+
+/* OVERDUE TASK */
+.task-card.overdue {
+  border-left: 4px solid #ef4444;
+  background: #fef2f2;
+}
+
+/* DEADLINE */
+.task-deadline {
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.task-deadline.overdue-text {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* BADGES */
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.badge-low {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-high {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badge-overdue {
+  background: #ef4444;
+  color: white;
+}
+
+/* ASSIGNEES */
+.assignees {
+  margin-top: 8px;
+}
+
+.assignee {
+  display: inline-block;
+  background: #e5e7eb;
+  padding: 3px 7px;
+  border-radius: 5px;
+  font-size: 12px;
+  margin-right: 4px;
 }
 
 /* MEMBERS */
