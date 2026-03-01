@@ -9,7 +9,7 @@ import re
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or "dev-secret-key"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
 db.init_app(app)
@@ -154,7 +154,6 @@ def project_details(id):
 
     # Get filter values from URL
     priority = request.args.get("priority")
-    status = request.args.get("status")
     assigned_user = request.args.get("assigned_user")
 
     # Base query
@@ -163,9 +162,6 @@ def project_details(id):
     # Apply filters if present
     if priority:
         query = query.filter(Task.priority == priority)
-
-    if status:
-        query = query.filter(Task.status == status)
 
     if assigned_user:
         query = query.join(Task.assignees).filter(User.id == int(assigned_user))

@@ -39,14 +39,6 @@
     <option value="High" {% if request.args.get('priority') == 'High' %}selected{% endif %}>High</option>
   </select>
 
-  <!-- Status Filter -->
-  <select name="status">
-    <option value="">All Status</option>
-    <option value="To Do" {% if request.args.get('status') == 'To Do' %}selected{% endif %}>To Do</option>
-    <option value="In Progress" {% if request.args.get('status') == 'In Progress' %}selected{% endif %}>In Progress</option>
-    <option value="Done" {% if request.args.get('status') == 'Done' %}selected{% endif %}>Done</option>
-  </select>
-
   <!-- Assigned User Filter -->
   <select name="assigned_user">
     <option value="">All Users</option>
