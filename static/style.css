@@ -114,6 +114,12 @@ body {
   border-top: 1px solid #e5e7eb;
 }
 
+.container {
+  max-width: 75%;
+  margin: auto;
+  padding: 40px;
+}
+
 .btn-primary {
   background: var(--primary);
   color: white;
