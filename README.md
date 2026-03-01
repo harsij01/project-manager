@@ -112,3 +112,50 @@ http://127.0.0.1:5000/
 - Session-based authentication
 - Secure form validation
 - Protected POST routes
+
+## Database Setup
+
+This project uses **Flask** with **SQLAlchemy** for database management. Follow these steps to create and populate the database:
+
+### 1. Create the Database Tables
+
+Run the Python shell or a script to create the tables:
+
+```bash
+python3
+```
+Then in the Python shell:
+
+```bash
+from app import app, db
+
+with app.app_context():
+    db.create_all()
+```
+### 2. Create an Admin User
+
+To create an admin user for your application, run the Python shell:
+
+```bash
+python3
+```
+
+Then in the Python shell:
+
+```bash
+from app import app, db
+from models import User
+from werkzeug.security import generate_password_hash
+
+# Replace values in brackets with your own
+admin = User(
+    name="[Your Name]",
+    email="[your-email@example.com]",
+    password_hash=generate_password_hash("[your-password]"),
+    role="admin"
+)
+
+with app.app_context():
+    db.session.add(admin)
+    db.session.commit()
+```
