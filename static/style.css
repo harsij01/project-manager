@@ -13,29 +13,105 @@
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--bg);
   color: var(--text);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-.container {
-  max-width: 100%;
-  margin: auto;
-  padding: 40px;
+.main-content {
+  flex: 1;
+  padding-top: 20px;
+}
+
+.site-header {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .navbar {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 15px 20px;
   display: flex;
   justify-content: space-between;
-  padding: 16px 24px;
-  background: var(--card-bg);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  align-items: center;
 }
 
-a {
-  margin-left: 16px;
+.logo a {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--primary);
   text-decoration: none;
-  color: var(--text);
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #374151;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav-links a:hover {
+  color: var(--primary);
+}
+
+.nav-btn {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.flash-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+.flash {
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Success */
+.flash-success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* Error */
+.flash-danger,
+.flash-error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Info */
+.flash-info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  background: white;
+  font-size: 14px;
+  color: #6b7280;
+  border-top: 1px solid #e5e7eb;
 }
 
 .btn-primary {

@@ -1,41 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{% block title %}{% endblock %}</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    </head>
-    <body>
-        <header>
-            <nav class="navbar">
-                <div class="logo"><a href="{{ url_for('home') }}">Project Manager</a></div>
-                <nav class="nav-links">
-                    {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('dashboard') }}">Dashboard</a>
-                        <a href="{{ url_for('logout') }}">Logout</a>
-                    {% else %}
-                        <a href="{{ url_for('login') }}">Login</a>
-                        <a href="{{ url_for('register') }}">Register</a>
-                    {% endif %}
-                </nav>
-            </nav>
-        </header>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="flash-container">
-            {% for category, message in messages %}
-                <div class="flash {{ category }}">{{ message }}</div>
-            {% endfor %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="site-header">
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{{ url_for('home') }}">Project Manager</a>
+        </div>
+
+        <div class="nav-links">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-primary nav-btn">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">
+                {{ message }}
             </div>
-        {% endif %}
-        {% endwith %}
+        {% endfor %}
+    </div>
+{% endif %}
+{% endwith %}
 
-        {% block content %}{% endblock %}
+<!-- Main Content -->
+<main class="main-content">
+    {% block content %}{% endblock %}
+</main>
 
-        <footer>
-            <p>&copy; 2026 Project Manager</p>
-        </footer>
-    </body>
+<footer class="footer">
+    <p>&copy; 2026 Project Manager. All rights reserved.</p>
+</footer>
+
+</body>
 </html>
