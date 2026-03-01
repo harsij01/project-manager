@@ -1,14 +1,20 @@
 {% extends "layout.html" %}
 
+{% block title %}Create Task{% endblock %}
+
 {% block content %}
 <div class="container">
-  <div class="form-container">
+  <section class="form-page">
 
     <div class="form-card">
-      <h2>Create Task</h2>
-      <p class="form-subtitle">Project: <strong>{{ project.name }}</strong></p>
+      <div class="form-header">
+        <h2>Create Task</h2>
+        <p class="form-subtitle">
+          Project: <strong>{{ project.name }}</strong>
+        </p>
+      </div>
 
-      <form method="POST">
+      <form method="POST" class="styled-form">
 
         <div class="form-group">
           <label for="name">Task Name</label>
@@ -17,8 +23,7 @@
 
         <div class="form-group">
           <label for="description">Description</label>
-          <textarea id="description" name="description" rows="4"
-            placeholder="Enter task description"></textarea>
+          <textarea id="description" name="description" rows="4" placeholder="Enter task description"></textarea>
         </div>
 
         <div class="form-group">
@@ -43,19 +48,17 @@
               <option value="{{ member.id }}">{{ member.name }}</option>
             {% endfor %}
           </select>
-          <small>Hold Ctrl (Windows) or Cmd (Mac) to select multiple users.</small>
+          <small class="muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple users.</small>
         </div>
 
-        <div class="form-buttons">
+        <div class="form-actions">
           <button type="submit" class="btn btn-primary">Create Task</button>
-          <a href="{{ url_for('project_details', id=project.id) }}" class="btn btn-secondary">
-            Cancel
-          </a>
+          <a href="{{ url_for('project_details', id=project.id) }}" class="btn btn-secondary">Cancel</a>
         </div>
 
       </form>
     </div>
 
-  </div>
+  </section>
 </div>
 {% endblock %}
