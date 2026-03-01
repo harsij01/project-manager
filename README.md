@@ -60,3 +60,48 @@ Frontend
 - Chart.js
 
 ---
+
+## Installation & Setup
+
+Clone the repository
+
+```bash
+git clone https://github.com/your-username/enterprise-project-management-system.git
+cd enterprise-project-management-system
+```
+
+Create a virtual environment
+
+```bash
+python -m venv venv
+source venv/bin/activate   # Mac/Linux
+venv\Scripts\activate      # Windows
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Set environment variables
+
+```bash
+export FLASK_APP=app.py      # Mac/Linux
+set FLASK_APP=app.py         # Windows
+
+export FLASK_ENV=development
+```
+
+Run the application
+
+```bash
+flask run
+```
+
+Visit:
+
+```bash
+http://127.0.0.1:5000/
+```
+---
