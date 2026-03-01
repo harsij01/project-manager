@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, abort, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from sqlalchemy import or_
+from sqlalchemy.orm import joinedload
 from models import db, User, Project, Task, ActivityLog
 from helpers import admin_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -155,28 +155,24 @@ def project_details(id):
     # Get filter values from URL
     priority = request.args.get("priority")
     status = request.args.get("status")
-    search = request.args.get("search")
     assigned_user = request.args.get("assigned_user")
 
-     # Base query
-    query = Task.query.filter_by(project_id=id)
+    # Base query
+    query = Task.query.filter(Task.project_id == id)
 
+    # Apply filters if present
     if priority:
         query = query.filter(Task.priority == priority)
 
     if status:
         query = query.filter(Task.status == status)
 
-    if search:
-        query = query.filter(Task.name.ilike(f"%{search}%"))
-
     if assigned_user:
-        query = query.join(Task.assignees).filter(User.id == assigned_user)
+        query = query.join(Task.assignees).filter(User.id == int(assigned_user))
 
+    filtered_tasks = query.options(joinedload(Task.assignees)).all()
 
-    filtered_tasks = query.all()
-
-    # Split into Kanban columns
+    # Split for Kanban columns
     todo_tasks = [t for t in filtered_tasks if t.status == "To Do"]
     inprogress_tasks = [t for t in filtered_tasks if t.status == "In Progress"]
     done_tasks = [t for t in filtered_tasks if t.status == "Done"]
