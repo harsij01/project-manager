@@ -1,126 +1,155 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+<div class="container">
+  <!-- PROJECT HEADER -->
+  <section class="project-header">
+    <div>
+      <h1>{{ project.name }}</h1>
+      <p class="muted">
+        {{ project.description or "No description provided." }}
+      </p>
+    </div>
 
-<h1>{{ project.name }}</h1>
-<p>{{ project.description or "No description provided." }}</p>
+    <div class="project-actions">
+      {% if current_user.role == "admin" %}
+        <a href="{{ url_for('create_task', id=project.id) }}" class="btn btn-primary">
+          + Create Task
+        </a>
+      {% endif %}
 
-<div class="progress-wrapper">
-  <div class="progress-bar" style="width: {{ project.progress_percentage }}%;">
-    {{ project.progress_percentage }}%
-  </div>
-</div>
+      <a href="{{ url_for('project_timeline', id=project.id) }}" class="btn btn-outline">
+        Timeline
+      </a>
 
-<hr>
+      <a href="{{ url_for('project_analytics', id=project.id) }}" class="btn btn-outline">
+        Analytics
+      </a>
+    </div>
+  </section>
 
-{% if current_user.role == "admin" %}
-  <a href="{{ url_for('create_task', id=project.id) }}" class="btn btn-primary">
-    Create Task
-  </a>
-{% endif %}
+  <!-- PROGRESS -->
+  <section class="project-progress">
+    <div class="progress-wrapper">
+      <div class="progress-bar"
+          style="width: {{ project.progress_percentage }}%;">
+      </div>
+    </div>
+    <span class="progress-label">
+      {{ project.progress_percentage }}% Complete
+    </span>
+  </section>
 
-<a href="{{ url_for('project_timeline', id=project.id) }}">
-    View Timeline
-</a>
+  <hr>
 
-<a href="{{ url_for('project_analytics', id=project.id) }}"
-   class="btn btn-primary">
-   View Analytics
-</a>
+  <!-- FILTER BAR -->
+  <section class="filter-section">
+    <form method="GET" class="filter-form">
 
-<hr>
+      <select name="priority">
+        <option value="">All Priorities</option>
+        <option value="Low" {% if request.args.get('priority') == 'Low' %}selected{% endif %}>Low</option>
+        <option value="Medium" {% if request.args.get('priority') == 'Medium' %}selected{% endif %}>Medium</option>
+        <option value="High" {% if request.args.get('priority') == 'High' %}selected{% endif %}>High</option>
+      </select>
 
-<form method="GET" class="filter-form">
-  <!-- Priority Filter -->
-  <select name="priority">
-    <option value="">All Priorities</option>
-    <option value="Low" {% if request.args.get('priority') == 'Low' %}selected{% endif %}>Low</option>
-    <option value="Medium" {% if request.args.get('priority') == 'Medium' %}selected{% endif %}>Medium</option>
-    <option value="High" {% if request.args.get('priority') == 'High' %}selected{% endif %}>High</option>
-  </select>
+      <select name="assigned_user">
+        <option value="">All Users</option>
+        {% for member in project.members %}
+          <option value="{{ member.id }}"
+            {% if request.args.get('assigned_user') == member.id|string %}selected{% endif %}>
+            {{ member.name }}
+          </option>
+        {% endfor %}
+      </select>
 
-  <!-- Assigned User Filter -->
-  <select name="assigned_user">
-    <option value="">All Users</option>
-    {% for member in project.members %}
-      <option value="{{ member.id }}"
-        {% if request.args.get('assigned_user') == member.id|string %}selected{% endif %}>
-        {{ member.name }}
-      </option>
-    {% endfor %}
-  </select>
+      <button type="submit" class="btn btn-primary">Apply</button>
+      <a href="{{ url_for('project_details', id=project.id) }}" class="btn btn-secondary">Clear</a>
+    </form>
+  </section>
 
-  <button type="submit" class="btn btn-primary">Apply</button>
-  <a href="{{ url_for('project_details', id=project.id) }}" class="btn btn-secondary">Clear</a>
-</form>
+  <!-- KANBAN -->
+  <section class="kanban-board">
 
-<hr>
-
-<div class="kanban-board">
-    <div class="kanban-column" data-status="To Do" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <div class="kanban-column" data-status="To Do"
+        ondrop="drop(event)" ondragover="allowDrop(event)">
       <h3>To Do</h3>
-      <div class="kanban-tasks" id="todo-tasks">
-      {% for task in todo_tasks %}
-        <div class="task-card" draggable="true" id="task-{{ task.id }}" ondragstart="drag(event)">
-          <h4>{{ task.name }}</h4>
-          <p>{{ task.description }}</p>
-        </div>
-      {% endfor %}
-      </div>
-    </div>
-
-    <div class="kanban-column" data-status="In Progress" ondrop="drop(event)" ondragover="allowDrop(event)">
-      <h3>In Progress</h3>
-      <div class="kanban-tasks" id="inprogress-tasks">
-      {% for task in inprogress_tasks %}
-        <div class="task-card" draggable="true" id="task-{{ task.id }}" ondragstart="drag(event)">
-          <h4>{{ task.name }}</h4>
-          <p>{{ task.description }}</p>
-        </div>
-      {% endfor %}
-      </div>
-    </div>
-
-    <div class="kanban-column" data-status="Done" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <h3>Done</h3>
-        <div class="kanban-tasks" id="done-tasks">
-        {% for task in done_tasks %}
-          <div class="task-card" draggable="true" id="task-{{ task.id }}" ondragstart="drag(event)">
+      <div class="kanban-tasks">
+        {% for task in todo_tasks %}
+          <div class="task-card" draggable="true"
+              id="task-{{ task.id }}" ondragstart="drag(event)">
             <h4>{{ task.name }}</h4>
-            <p>{{ task.description }}</p>
+            <p class="muted">{{ task.description }}</p>
           </div>
         {% endfor %}
       </div>
     </div>
+
+    <div class="kanban-column" data-status="In Progress"
+        ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h3>In Progress</h3>
+      <div class="kanban-tasks">
+        {% for task in inprogress_tasks %}
+          <div class="task-card" draggable="true"
+              id="task-{{ task.id }}" ondragstart="drag(event)">
+            <h4>{{ task.name }}</h4>
+            <p class="muted">{{ task.description }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="kanban-column" data-status="Done"
+        ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h3>Done</h3>
+      <div class="kanban-tasks">
+        {% for task in done_tasks %}
+          <div class="task-card" draggable="true"
+              id="task-{{ task.id }}" ondragstart="drag(event)">
+            <h4>{{ task.name }}</h4>
+            <p class="muted">{{ task.description }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </section>
+
+  <!-- MEMBERS -->
+  <section class="members-section">
+    <h3>Project Members</h3>
+
+    <div class="members-list">
+      {% for member in project.members %}
+        <div class="member-card">
+          <strong>{{ member.name }}</strong>
+          <span class="muted">{{ member.email }}</span>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if current_user.role == "admin" %}
+    <div class="add-member">
+      <form method="POST"
+            action="{{ url_for('add_member', id=project.id) }}">
+        <select name="user_id" required>
+          <option value="">-- Select User --</option>
+          {% for user in users %}
+            {% if user not in project.members %}
+              <option value="{{ user.id }}">
+                {{ user.name }} ({{ user.email }})
+              </option>
+            {% endif %}
+          {% endfor %}
+        </select>
+
+        <button type="submit" class="btn btn-primary">
+          Add Member
+        </button>
+      </form>
+    </div>
+    {% endif %}
+  </section>
 </div>
-
-<h3>Project Members</h3>
-
-<ul>
-  {% for member in project.members %}
-    <li>{{ member.name }} ({{ member.email }})</li>
-  {% endfor %}
-</ul>
-
-{% if current_user.role == "admin" %}
-<hr>
-<h3>Add Member to Project</h3>
-
-<form method="POST" action="{{ url_for('add_member', id=project.id) }}">
-  <select name="user_id" required>
-    <option value="">-- Select User --</option>
-
-    {% for user in users %}
-      {% if user not in project.members %}
-        <option value="{{ user.id }}">{{ user.name }} ({{ user.email }})</option>
-      {% endif %}
-    {% endfor %}
-
-  </select>
-
-  <button type="submit" class="btn btn-primary">Add Member</button>
-</form>
-{% endif %}
-
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 {% endblock %}
