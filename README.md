@@ -105,3 +105,10 @@ Visit:
 http://127.0.0.1:5000/
 ```
 ---
+
+## Security
+
+- CSRF protection enabled
+- Session-based authentication
+- Secure form validation
+- Protected POST routes
