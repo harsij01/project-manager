@@ -3,35 +3,45 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<main>
+<main class="home-page">
+
+    <!-- HERO SECTION -->
     <section class="hero">
-        <h2>Organize Your Projects. Track Your Tasks.</h2>
-        <p>Manage your projects and tasks easily with your team.</p>
-        {% if not current_user.is_authenticated %}
+        <div class="hero-content">
+            <h1>Organize Your Projects.<br>Track Your Tasks.</h1>
+            <p>Manage your projects and tasks easily with your team.</p>
+
+            {% if not current_user.is_authenticated %}
             <div class="hero-buttons">
-                <a class="btn" href="{{ url_for('login') }}">Login</a>
-                <a class="btn btn-primary" href="{{ url_for('register') }}">Register</a>
+                <a class="btn btn-secondary" href="{{ url_for('login') }}">Login</a>
+                <a class="btn btn-primary" href="{{ url_for('register') }}">Get Started</a>
             </div>
-        {% endif %}
+            {% endif %}
+        </div>
     </section>
 
+    <!-- FEATURES SECTION -->
     <section class="features">
-        <div class="feature">
+        <div class="feature-card">
             <h3>Create Projects</h3>
             <p>Start new projects and manage your team efficiently.</p>
         </div>
-        <div class="feature">
+
+        <div class="feature-card">
             <h3>Assign Tasks</h3>
-            <p>Assign tasks to team members and set priorities and deadlines.</p>
+            <p>Assign tasks to members and set priorities and deadlines.</p>
         </div>
-        <div class="feature">
+
+        <div class="feature-card">
             <h3>Track Progress</h3>
-            <p>See project completion percentage and overdue tasks at a glance.</p>
+            <p>See completion percentage and overdue tasks instantly.</p>
         </div>
-        <div class="feature">
+
+        <div class="feature-card">
             <h3>Collaborate</h3>
             <p>Keep your team aligned and update task statuses in real time.</p>
         </div>
     </section>
+
 </main>
 {% endblock %}
