@@ -110,6 +110,20 @@ def dashboard():
     else:
         projects = current_user.projects
 
+    total_projects = len(projects)
+    total_tasks = sum(len(project.tasks) for project in projects)
+    completed_projects = sum(
+        1 for project in projects if project.progress_percentage == 100
+    )
+
+    return render_template(
+        "dashboard.html",
+        projects=projects,
+        total_projects=total_projects,
+        total_tasks=total_tasks,
+        completed_projects=completed_projects
+    )
+
     return render_template("dashboard.html", projects=projects)
 
 @app.route('/project/create', methods=["GET", "POST"])

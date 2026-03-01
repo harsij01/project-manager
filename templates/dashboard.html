@@ -4,68 +4,87 @@
 
 {% block content %}
 
-<!-- HERO / INTRO -->
-<section class="dashboard-hero">
-  <div>
-    <h2>Welcome back, {{ current_user.name }} 👋</h2>
-    <p class="muted">Here’s a snapshot of your work and progress.</p>
-  </div>
-
-  {% if current_user.role == 'admin' %}
-    <a href="{{ url_for('create_project') }}" class="btn btn-primary">
-      + New Project
-    </a>
-  {% endif %}
-</section>
-
-<!-- PROJECT LIST -->
-<section class="projects-container">
-  <h3 class="section-title">Your Projects</h3>
-
-  {% if projects %}
-    <div class="project-grid">
-      {% for project in projects %}
-        <div class="project-card">
-          <div class="project-header">
-            <h4>{{ project.name }}</h4>
-            <span class="badge">
-              {{ project.progress_percentage }}%
-            </span>
-          </div>
-
-          <p class="muted">
-            {{ project.description or "No description provided." }}
-          </p>
-
-          <div class="progress-wrapper">
-            <div
-              class="progress-bar"
-              style="width: {{ project.progress_percentage }}%;">
-            </div>
-          </div>
-
-          <div class="project-footer">
-            <span class="muted">
-              {{ project.tasks|length }} tasks
-            </span>
-
-            <a
-              href="{{ url_for('project_details', id=project.id) }}"
-              class="btn btn-outline">
-              View
-            </a>
-          </div>
-        </div>
-      {% endfor %}
+<div class="container">
+    <!-- HERO / INTRO -->
+    <section class="dashboard-hero">
+    <div>
+        <h2>Welcome back, {{ current_user.name }} 👋</h2>
+        <p class="muted">Here’s a snapshot of your work and progress.</p>
     </div>
-  {% else %}
-    <p class="empty-state">
-      You don’t have any projects yet.
-      {% if current_user.role == "admin" %}
-        <a href="{{ url_for('create_project') }}">Create one</a>
-      {% endif %}
-    </p>
-  {% endif %}
-</section>
 
+    {% if current_user.role == 'admin' %}
+        <a href="{{ url_for('create_project') }}" class="btn btn-primary">
+        + New Project
+        </a>
+    {% endif %}
+    </section>
+
+    <!-- SUMMARY CARD -->
+    <section class="dashboard-cards">
+    <div class="card">
+        <h3>{{ total_projects }}</h3>
+        <p>Total Projects</p>
+    </div>
+
+    <div class="card">
+        <h3>{{ total_tasks }}</h3>
+        <p>Total Tasks</p>
+    </div>
+
+    <div class="card">
+        <h3>{{ completed_projects }}</h3>
+        <p>Completed Projects</p>
+    </div>
+    </section>
+
+    <!-- PROJECT LIST -->
+    <section class="projects-container">
+    <h3 class="section-title">Your Projects</h3>
+
+    {% if projects %}
+        <div class="project-grid">
+        {% for project in projects %}
+            <div class="project-card">
+            <div class="project-header">
+                <h4>{{ project.name }}</h4>
+                <span class="badge">
+                {{ project.progress_percentage }}%
+                </span>
+            </div>
+
+            <p class="muted">
+                {{ project.description or "No description provided." }}
+            </p>
+
+            <div class="progress-wrapper">
+                <div
+                class="progress-bar"
+                style="width: {{ project.progress_percentage }}%;">
+                </div>
+            </div>
+
+            <div class="project-footer">
+                <span class="muted">
+                {{ project.tasks|length }} tasks
+                </span>
+
+                <a
+                href="{{ url_for('project_details', id=project.id) }}"
+                class="btn btn-outline">
+                View
+                </a>
+            </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-state">
+        You don’t have any projects yet.
+        {% if current_user.role == "admin" %}
+            <a href="{{ url_for('create_project') }}">Create one</a>
+        {% endif %}
+        </p>
+    {% endif %}
+    </section>
+</div>
 {% endblock %}
