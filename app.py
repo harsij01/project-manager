@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, abort, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from sqlalchemy.orm import joinedload
+from flask_wtf import CSRFProtect
 from models import db, User, Project, Task, ActivityLog
 from helpers import admin_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,6 +12,8 @@ import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or "dev-secret-key"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+
+csrf = CSRFProtect(app)
 
 db.init_app(app)
 

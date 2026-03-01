@@ -45,6 +45,7 @@
   <!-- FILTER BAR -->
   <section class="filter-section">
     <form method="GET" class="filter-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
       <select name="priority">
         <option value="">All Priorities</option>
@@ -241,8 +242,9 @@
 
     {% if current_user.role == "admin" %}
     <div class="add-member">
-      <form method="POST"
-            action="{{ url_for('add_member', id=project.id) }}">
+      <form method="POST" action="{{ url_for('add_member', id=project.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
         <select name="user_id" required>
           <option value="">-- Select User --</option>
           {% for user in users %}

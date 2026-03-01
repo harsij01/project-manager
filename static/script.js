@@ -19,13 +19,18 @@ function drop(ev) {
 
   const taskId = data.split("-")[1];
 
-  fetch(`/tasks/${taskId}/update_status`, {
+  const csrfToken = document
+    .querySelector("meta[name='csrf-token']")
+    .getAttribute("content");
+
+    fetch(`/tasks/${taskId}/update_status`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken
     },
     body: JSON.stringify({ status: status })
-  })
+    })
   .then(response => response.json())
   .then(data => {
     if (data.success) {
