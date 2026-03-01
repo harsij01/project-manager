@@ -185,7 +185,7 @@ def project_details(id):
     inprogress_tasks = [t for t in filtered_tasks if t.status == "In Progress"]
     done_tasks = [t for t in filtered_tasks if t.status == "Done"]
 
-    users = project.members
+    users = User.query.all()
 
     return render_template(
         "project_details.html",
