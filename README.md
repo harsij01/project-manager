@@ -106,7 +106,7 @@ http://127.0.0.1:5000/
 ```
 ---
 
-## 📊 Database Schema
+## Database Schema
 
 This application uses **Flask-SQLAlchemy** for ORM-based database management.
 
@@ -118,7 +118,7 @@ The system consists of five main models:
 - ActivityLog
 - Association tables (project_members, task_assignees)
 
-### 👤 User
+### User
 
 Represents a registered user of the system.
 
@@ -136,7 +136,7 @@ Represents a registered user of the system.
 - Many-to-many with **Project** (project members)
 - Many-to-many with **Task** (task assignees)
 
-### 📁 Project
+### Project
 
 Represents a project containing multiple tasks.
 
@@ -159,7 +159,7 @@ Represents a project containing multiple tasks.
 - `progress_percentage`  
   Calculates completion percentage based on tasks marked as `"Done"`.
 
-### 📝 Task
+### Task
 
 Represents a task within a project.
 
@@ -186,7 +186,7 @@ Represents a task within a project.
   - Returns `"Overdue"` if the deadline has passed and the task is not completed
   - Otherwise returns its current status
 
-### 📜 ActivityLog
+### ActivityLog
 
 Tracks actions performed within a project.
 
@@ -204,7 +204,7 @@ Tracks actions performed within a project.
 - Belongs to one **User**
 - Belongs to one **Project**
 
-### 🔗 Association Tables
+### Association Tables
 
 #### project_members
 Connects users to projects (many-to-many).
@@ -212,7 +212,7 @@ Connects users to projects (many-to-many).
 #### task_assignees
 Connects users to tasks (many-to-many).
 
-### 🔁 Relationship Overview
+### Relationship Overview
 
 - A **User** can belong to many Projects.
 - A **Project** can have many Users.
@@ -220,7 +220,7 @@ Connects users to tasks (many-to-many).
 - A **Task** can have many Users (assignees).
 - A **Project** can have many Activity Logs.
 
-### 🧠 Design Highlights
+### Design Highlights
 
 - Uses cascading deletes (`delete-orphan`) for data integrity.
 - Implements computed properties for dynamic data (progress, overdue detection).
