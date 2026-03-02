@@ -1,0 +1,8 @@
+virtualenv
+
+Flask
+Flask-Login
+Flask-SQLAlchemy
+Flask-WTF
+email-validator
+Werkzeug
