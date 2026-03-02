@@ -106,6 +106,129 @@ http://127.0.0.1:5000/
 ```
 ---
 
+## 📊 Database Schema
+
+This application uses **Flask-SQLAlchemy** for ORM-based database management.
+
+The system consists of five main models:
+
+- User
+- Project
+- Task
+- ActivityLog
+- Association tables (project_members, task_assignees)
+
+### 👤 User
+
+Represents a registered user of the system.
+
+```bash
+| Field | Type | Description |
+|-------|------|------------|
+| id | Integer (PK) | Unique user ID |
+| name | String(100) | Unique username |
+| email | String(100) | Unique email address |
+| role | String(20) | User role (`admin` or `member`) |
+| password_hash | String(300) | Hashed password |
+```
+
+#### Relationships
+- Many-to-many with **Project** (project members)
+- Many-to-many with **Task** (task assignees)
+
+### 📁 Project
+
+Represents a project containing multiple tasks.
+
+```bash
+| Field | Type | Description |
+|-------|------|------------|
+| id | Integer (PK) | Unique project ID |
+| name | String(200) | Project name |
+| description | String(300) | Project description |
+| created_by | Integer (FK → User.id) | Project creator |
+| created_at | DateTime | Creation timestamp |
+```
+
+#### Relationships
+- Many-to-many with **User** (project members)
+- One-to-many with **Task**
+- One-to-many with **ActivityLog**
+
+#### Computed Property
+- `progress_percentage`  
+  Calculates completion percentage based on tasks marked as `"Done"`.
+
+### 📝 Task
+
+Represents a task within a project.
+
+```bash
+| Field | Type | Description |
+|-------|------|------------|
+| id | Integer (PK) | Unique task ID |
+| name | String(200) | Task title |
+| description | Text | Task details |
+| created_at | DateTime | Creation timestamp |
+| completed_at | DateTime | Completion timestamp |
+| priority | String(50) | Task priority |
+| status | String(50) | Task status (`To Do`, `In Progress`, `Done`) |
+| deadline | DateTime | Due date |
+| project_id | Integer (FK → Project.id) | Associated project |
+```
+
+#### Relationships
+- Belongs to one **Project**
+- Many-to-many with **User** (assignees)
+
+#### Computed Property
+- `display_status`
+  - Returns `"Overdue"` if the deadline has passed and the task is not completed
+  - Otherwise returns its current status
+
+### 📜 ActivityLog
+
+Tracks actions performed within a project.
+
+```bash
+| Field | Type | Description |
+|-------|------|------------|
+| id | Integer (PK) | Unique log ID |
+| action | String(200) | Description of action |
+| timestamp | DateTime | When action occurred |
+| user_id | Integer (FK → User.id) | Who performed the action |
+| project_id | Integer (FK → Project.id) | Related project |
+```
+
+#### Relationships
+- Belongs to one **User**
+- Belongs to one **Project**
+
+### 🔗 Association Tables
+
+#### project_members
+Connects users to projects (many-to-many).
+
+#### task_assignees
+Connects users to tasks (many-to-many).
+
+### 🔁 Relationship Overview
+
+- A **User** can belong to many Projects.
+- A **Project** can have many Users.
+- A **Project** can have many Tasks.
+- A **Task** can have many Users (assignees).
+- A **Project** can have many Activity Logs.
+
+### 🧠 Design Highlights
+
+- Uses cascading deletes (`delete-orphan`) for data integrity.
+- Implements computed properties for dynamic data (progress, overdue detection).
+- Separates membership and task assignment using association tables.
+- Supports role-based access (`admin`, `member`).
+
+---
+
 ## Security
 
 - CSRF protection enabled
