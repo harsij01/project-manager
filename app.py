@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, abort, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from sqlalchemy.orm import joinedload
-from flask_wtf import CSRFProtect
+from flask_wtf import CSRFProtect, FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Email, Length, Regexp, ValidationError
 from models import db, User, Project, Task, ActivityLog
 from helpers import admin_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-import re
 import os
 
 app = Flask(__name__)
@@ -29,45 +30,45 @@ def load_user(user_id):
 def home():
     return render_template('home.html')
 
+class RegisterForm(FlaskForm):
+    username = StringField("Username", validators=[
+        DataRequired(message="Username is required.")
+    ])
+
+    email = StringField("Email", validators=[
+        DataRequired(message="Email is required."),
+        Email(message="Please enter a valid email address.")
+    ])
+
+    password = PasswordField("Password", validators=[
+        DataRequired(message="Password is required."),
+        Length(min=8, message="Password must be at least 8 characters."),
+        Regexp(r"[A-Z]", message="Must contain at least one uppercase letter."),
+        Regexp(r"[a-z]", message="Must contain at least one lowercase letter."),
+        Regexp(r"[0-9]", message="Must contain at least one number.")
+    ])
+
+    submit = SubmitField("Register")
+
+    # Custom database validation
+    def validate_username(self, username):
+        if User.query.filter_by(name=username.data).first():
+            raise ValidationError("Username already exists.")
+
+    def validate_email(self, email):
+        if User.query.filter_by(email=email.data).first():
+            raise ValidationError("Email already registered.")
+
 @app.route('/register', methods=["GET", "POST"])
 def register():
-    if request.method == 'POST':
-        username = request.form["username"]
-        email = request.form["email"]
-        password = request.form["password"]
+    form = RegisterForm()
 
-        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-            flash("Invalid email format", "error")
-            return redirect(url_for("register"))
-
-        if len(password) < 8:
-            flash("Password must be at least 8 characters long.", "error")
-            return redirect(url_for('register'))
-
-        if not re.search(r"[A-Z]", password):
-            flash("Password must contain at least one uppercase letter.", "error")
-            return redirect(url_for('register'))
-
-        if not re.search(r"[a-z]", password):
-            flash("Password must contain at least one lowercase letter.", "error")
-            return redirect(url_for('register'))
-
-        if not re.search(r"[0-9]", password):
-            flash("Password must contain at least one number.", "error")
-            return redirect(url_for('register'))
-
-        existing_user = User.query.filter_by(name=username).first()
-        existing_email = User.query.filter_by(email=email).first()
-
-        if existing_user or existing_email:
-            flash("Username or Email already exists", "error")
-            return redirect(url_for('register'))
-
-        password_hash = generate_password_hash(password)
+    if form.validate_on_submit():
+        password_hash = generate_password_hash(form.password.data)
 
         new_user = User(
-            name=username,
-            email=email,
+            name=form.username.data,
+            email=form.email.data,
             role="member",
             password_hash=password_hash
         )
@@ -75,10 +76,10 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        flash("Registration Successful", "success")
-        return redirect(url_for('login'))
+        flash("Registration successful!", "success")
+        return redirect(url_for("login"))
 
-    return render_template('register.html')
+    return render_template("register.html", form=form)
 
 @app.route('/login', methods=["GET", "POST"])
 def login():

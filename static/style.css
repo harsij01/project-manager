@@ -618,6 +618,17 @@ body {
   width: 100%;
 }
 
+.error {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  display: block;
+}
+
+.input-error {
+  border: 2px solid #e74c3c;
+}
+
 /* AUTH LINK */
 .auth-link {
   margin-top: 15px;
