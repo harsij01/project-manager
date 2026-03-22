@@ -1,4 +1,4 @@
-# Enterprise Project Management System
+# Project Manager
 
 A full-stack project management web application built with Flask, SQLAlchemy, and JavaScript, featuring Kanban task management, analytics dashboards, and secure authentication.
 
