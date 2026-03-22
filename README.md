@@ -66,8 +66,8 @@ Frontend
 Clone the repository
 
 ```bash
-git clone https://github.com/your-username/enterprise-project-management-system.git
-cd enterprise-project-management-system
+git clone https://github.com/your-username/project-manager.git
+cd project-manager
 ```
 
 Create a virtual environment
