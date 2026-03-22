@@ -66,7 +66,7 @@ Frontend
 Clone the repository
 
 ```bash
-git clone https://github.com/your-username/project-manager.git
+git clone https://github.com/harsij01/project-manager.git
 cd project-manager
 ```
 
