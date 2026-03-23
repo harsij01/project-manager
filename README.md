@@ -2,6 +2,10 @@
 
 A full-stack project management web application built with Flask, SQLAlchemy, and JavaScript, featuring Kanban task management, analytics dashboards, and secure authentication.
 
+## Demo Video
+
+[![Watch the video](https://img.youtube.com/vi/uDy82IiKHOg/0.jpg)](https://youtu.be/uDy82IiKHOg)
+
 ---
 
 ## Features
